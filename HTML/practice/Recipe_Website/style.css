@@ -1,0 +1,59 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    margin-top: auto;
+}
+.container{
+    width: 100vh;
+    height: 100vw;
+    overflow-x: none;
+}
+.navContainer{
+    width: 100vw;
+    background-color: aqua;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+nav{
+    width: 100%;
+    overflow: none;
+}
+
+#navList{
+    padding: 15px;
+    list-style: none;
+    font-size: 2.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#navName{
+    font-size: 2.8rem;
+}
+
+a{
+    text-decoration: none;
+}
+
+#navItems{
+    display: flex;
+    gap: 40px;
+}
+
+.footerBox{
+    background-color: aqua;
+    text-align: center;
+    min-height: auto;
+}
+
+.contentBox{
+    width: 70%;
+    margin: auto;
+    border: 1px solid blue;
+    background-color: whitesmoke;
+}
