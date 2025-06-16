@@ -1,0 +1,15 @@
+*{
+  margin: 0%;
+  padding: 0%;
+  box-sizing: border-box;
+}
+
+body{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(219, 130, 130);
+  color: rgb(255, 255, 255);
+  font-size: 1rem;
+}
