@@ -30,7 +30,7 @@ function HomePage() {
             {...fadeInUp}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            <Link to="/appointments">
+            <Link to="/appointment">
               <button className="bg-pink-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-pink-600 transition">
                 Book an Appointment
               </button>
