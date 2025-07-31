@@ -4,10 +4,13 @@ import { registerUser, loginUser } from '../controllers/userController.js'
 
 const router = express.Router()
 
-// Register a new user
 router.post('/register', registerUser)
-
-// Login a user
 router.post('/login', loginUser)
+
+// ✅ Test Route
+router.post('/test', (req, res) => {
+  console.log("🚀 Test route was hit!");
+  res.status(200).json({ message: "Test route works" });
+});
 
 export default router

@@ -1,42 +1,38 @@
+// server/index.js
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import { createRequire } from 'module'
+import userRoutes from './routes/userRoutes.js'
+import stylistRoutes from './routes/stylistRoutes.js'
+import { initializeCollections } from './utils/initCollection.js'
 
 const require = createRequire(import.meta.url)
 const cors = require('cors')
 
-// Routes
-import userRoutes from './routes/userRoutes.js'
-//import stylistRoutes from './routes/stylistRoutes.js'
-
-// Utility
-import { initializeCollections } from './utils/initCollections.js'
-
+// 🔐 Load .env variables
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
 
-// Middlewareapp.use(cors())
+// 🔧 Middleware
 app.use(cors())
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Parse JSON bodies
-app.use(express.json())
+// 🌐 Routes
+app.get('/', (req, res) => res.send('Salon Desk Backend Running'))
+app.use('/api/users', userRoutes)
+app.use('/api/stylists', stylistRoutes)
 
-// Connect to MongoDB and Start Server
+// 🛢️ MongoDB Connection & Server Start
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   dbName: 'SalonDesk'
 })
   .then(async () => {
     console.log('✅ MongoDB connected')
-
-    // Optional: Initialize collections or dummy data
-    await initializeCollections()
-
+    await initializeCollections() // Optional seeding
     app.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}`)
     })
@@ -44,8 +40,3 @@ mongoose.connect(process.env.MONGODB_URI, {
   .catch(err => {
     console.error('❌ MongoDB connection error:', err)
   })
-
-app.get('/', (req, res) => res.send('Salon Desk Backend Running'))
-app.use('/api/users', userRoutes)
-
-
