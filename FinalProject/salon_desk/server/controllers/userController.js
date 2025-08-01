@@ -7,7 +7,7 @@ import User from '../models/User.js'
 export const registerUser = async (req, res) => {
   console.log('🔥 Register called with:', req.body)
 
-  const { name, email, password, role } = req.body
+  const { name, email, password, phone } = req.body;
 
   try {
     const existingUser = await User.findOne({ email })
@@ -17,7 +17,15 @@ export const registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    const newUser = new User({ name, email, password: hashedPassword, role })
+
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+      role: 'client' // 🟢 Hardcoded here
+    })
+
     await newUser.save()
 
     console.log('✅ User registered:', email)

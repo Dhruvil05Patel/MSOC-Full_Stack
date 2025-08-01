@@ -4,3 +4,7 @@
 @theme {
   --font-nunito: "Nunito Sans", sans-serif; 
 }
+
+body {
+  overflow-y: scroll;
+}

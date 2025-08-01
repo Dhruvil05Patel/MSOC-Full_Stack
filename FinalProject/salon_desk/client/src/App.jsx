@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage'
 import OwnerDashboard from './pages/OwnerDashboard'
 import LoginPage from './pages/LoginPage'
 import Navbar from './components/Navbar'
+import RegisterPage from './pages/RegisterPage'
 import { useUser } from './context/UserContext'
 import './App.css'
 
@@ -21,7 +22,7 @@ function App() {
         <Route path="/services" element={<ServicePage />} />
         <Route path="/stylist" element={<StylistPage />} />
         <Route path="/appointment" element={<AppointmentPage />} />
-
+        <Route path="/register" element={<RegisterPage />} />
         {/* Dynamic Dashboard Route */}
         <Route
           path="/dashboard"

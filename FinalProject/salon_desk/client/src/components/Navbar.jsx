@@ -23,7 +23,7 @@ function Navbar() {
   }
 
   return (
-    <nav className="bg-pink-100 py-4 px-6 flex justify-between items-center shadow">
+    <nav className="relative bg-pink-100 py-4 px-6 flex justify-between items-center shadow">
       {/* Brand */}
       <Link to="/" className="text-xl md:text-2xl font-bold text-pink-600">
         Éclat

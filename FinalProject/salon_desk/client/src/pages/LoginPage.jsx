@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { fadeInUp } from '../animations/motionVariants'
 import PageWrapper from '../components/pageWrapper'
 import toast from 'react-hot-toast'
-
+import axios from '../utils/axios' // ✅ Use custom axios instance
 
 function LoginPage() {
   const [email, setEmail] = useState('')
@@ -14,30 +14,21 @@ function LoginPage() {
   const { setRole } = useUser()
   const navigate = useNavigate()
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
-
-    setTimeout(() => {
-      // Hardcoded authentication
-      if (email === 'owner@eclat.com' && password === 'owner123') {
-        setRole('owner')
-        toast.success('Welcome, Owner!')
-        navigate('/dashboard')
-      } else if (email === 'client@eclat.com' && password === 'client123') {
-        setRole('client')
-        toast.success('Welcome, Client!')
-        navigate('/dashboard')
-      } else {
-        toast.error('Invalid credentials!')
-      }
+    try {
+      const res = await axios.post('/users/login', { email, password })
+      const { user, token } = res.data
+      localStorage.setItem('token', token)
+      setRole(user.role)
+      toast.success(`Welcome, ${user.name}!`)
+      navigate('/dashboard')
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Invalid credentials!')
+    } finally {
       setLoading(false)
-    }, 1000)
-  }
-  const handleLogout = () => {
-  setRole(null)
-  setIsOpen(false)
-  navigate('/')
+    }
   }
 
   return (
@@ -77,6 +68,15 @@ function LoginPage() {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+        <p className="text-center mt-4 text-sm text-gray-600">
+          Don’t have an account?{' '}
+          <span
+            className="text-pink-500 hover:underline cursor-pointer"
+            onClick={() => navigate('/register')}
+          >
+            Click here to register
+          </span>
+        </p>
       </motion.div>
     </PageWrapper>
   )
