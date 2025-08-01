@@ -13,30 +13,6 @@ import GuestRoute from './routes/GuestRoute'
 import { UserProvider, useUser } from './context/UserContext'
 import './App.css'
 
-// Temporary debug component to clear auth state
-function DebugAuthClear() {
-  const { logout, token, role } = useUser()
-  
-  if (!token && !role) return null // Hide if already logged out
-  
-  return (
-    <div style={{
-      position: 'fixed',
-      top: '10px',
-      right: '10px',
-      zIndex: 9999,
-      backgroundColor: 'red',
-      color: 'white',
-      padding: '8px 12px',
-      borderRadius: '4px',
-      fontSize: '12px',
-      cursor: 'pointer'
-    }} onClick={logout}>
-      🐛 Clear Auth (Debug)
-    </div>
-  )
-}
-
 function DashboardRouter() {
   const { role } = useUser()
 
@@ -50,7 +26,6 @@ function App() {
   return (
     <UserProvider>
       <Router>
-        <DebugAuthClear />
         <Navbar />
         <Routes>
           {/* ✅ Public Routes */}
