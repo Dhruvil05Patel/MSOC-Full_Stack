@@ -28,7 +28,10 @@ export const UserProvider = ({ children }) => {
     setRole(null)
     setToken(null)
     setUser(null)
-    localStorage.clear() // Consider using removeItem only for specific keys
+    // Only remove auth-related items instead of clearing all localStorage
+    localStorage.removeItem('token')
+    localStorage.removeItem('role')
+    localStorage.removeItem('user')
   }
 
   return (

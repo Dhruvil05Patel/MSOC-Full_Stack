@@ -22,13 +22,10 @@ function LoginPage() {
       const res = await axios.post('/users/login', { email, password })
       const { user, token } = res.data
 
-      // Set all user context values and persist to localStorage
+      // Set user context values (localStorage sync is automatic via UserContext)
       setUser(user)
       setRole(user.role)
       setToken(token)
-      localStorage.setItem('token', token)
-      localStorage.setItem('role', user.role)
-      localStorage.setItem('user', JSON.stringify(user))
 
       toast.success(`Welcome, ${user.name}!`)
       navigate('/dashboard')

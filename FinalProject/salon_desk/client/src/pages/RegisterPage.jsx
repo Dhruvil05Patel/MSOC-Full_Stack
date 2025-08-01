@@ -44,15 +44,17 @@ function RegisterPage() {
       })
 
       const { user, token } = loginRes.data
+      
+      // Set user context values (localStorage sync is automatic via UserContext)
+      setUser(user)
       setUserRole(user.role)
       setToken(token)
-      setUser(user)
 
-      toast.success(`Welcome, ${user.name}`)
+      toast.success(`Welcome, ${user.name}!`)
       navigate('/dashboard')
     } catch (err) {
       console.error('❌ Registration error:', err)
-      toast.error(err?.response?.data?.message || err.message || 'Registration failed')
+      toast.error(err?.response?.data?.message || 'Registration failed')
     } finally {
       setLoading(false)
     }
