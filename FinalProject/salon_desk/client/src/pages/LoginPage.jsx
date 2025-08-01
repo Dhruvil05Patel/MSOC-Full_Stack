@@ -1,3 +1,4 @@
+// src/pages/LoginPage.jsx
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -5,13 +6,13 @@ import { motion } from 'framer-motion'
 import { fadeInUp } from '../animations/motionVariants'
 import PageWrapper from '../components/pageWrapper'
 import toast from 'react-hot-toast'
-import axios from '../utils/axios' // ✅ Use custom axios instance
+import axios from '../utils/axios'
 
 function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { setRole } = useUser()
+  const { setRole, setToken, setUser } = useUser()
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {
@@ -20,8 +21,15 @@ function LoginPage() {
     try {
       const res = await axios.post('/users/login', { email, password })
       const { user, token } = res.data
-      localStorage.setItem('token', token)
+
+      // Set all user context values and persist to localStorage
+      setUser(user)
       setRole(user.role)
+      setToken(token)
+      localStorage.setItem('token', token)
+      localStorage.setItem('role', user.role)
+      localStorage.setItem('user', JSON.stringify(user))
+
       toast.success(`Welcome, ${user.name}!`)
       navigate('/dashboard')
     } catch (err) {
@@ -60,9 +68,7 @@ function LoginPage() {
             type="submit"
             disabled={loading}
             className={`w-full py-2 rounded-full font-semibold transition ${
-              loading
-                ? 'bg-pink-300 cursor-not-allowed'
-                : 'bg-pink-500 hover:bg-pink-600'
+              loading ? 'bg-pink-300 cursor-not-allowed' : 'bg-pink-500 hover:bg-pink-600'
             } text-white`}
           >
             {loading ? 'Logging in...' : 'Login'}

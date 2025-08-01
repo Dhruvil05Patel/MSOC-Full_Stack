@@ -13,10 +13,11 @@ function RegisterPage() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
+  const [role, setRole] = useState('client')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const { setRole } = useUser()
+  const { setRole: setUserRole, setToken, setUser } = useUser()
 
   const handleRegister = async (e) => {
     e.preventDefault()
@@ -28,10 +29,10 @@ function RegisterPage() {
         name,
         email,
         phone,
-        password
+        password,
+        role
       })
 
-      // If registration failed, throw error
       if (registerRes.status !== 201 && registerRes.status !== 200) {
         throw new Error('Registration failed')
       }
@@ -43,12 +44,14 @@ function RegisterPage() {
       })
 
       const { user, token } = loginRes.data
-      localStorage.setItem('token', token)
-      setRole(user.role)
+      setUserRole(user.role)
+      setToken(token)
+      setUser(user)
+
       toast.success(`Welcome, ${user.name}`)
       navigate('/dashboard')
     } catch (err) {
-      console.error('Registration error:', err)
+      console.error('❌ Registration error:', err)
       toast.error(err?.response?.data?.message || err.message || 'Registration failed')
     } finally {
       setLoading(false)
@@ -99,6 +102,17 @@ function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+          </div>
+          <div>
+            <label className="block font-semibold mb-1">Role</label>
+            <select
+              className="w-full border border-gray-300 rounded-lg p-2"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="client">Client</option>
+              <option value="owner">Owner</option>
+            </select>
           </div>
           <button
             type="submit"

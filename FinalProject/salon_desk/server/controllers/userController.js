@@ -7,7 +7,7 @@ import User from '../models/User.js'
 export const registerUser = async (req, res) => {
   console.log('🔥 Register called with:', req.body)
 
-  const { name, email, password, phone } = req.body;
+  const { name, email, password, phone, role } = req.body;
 
   try {
     const existingUser = await User.findOne({ email })
@@ -23,7 +23,7 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       phone,
-      role: 'client' // 🟢 Hardcoded here
+      role: role || 'client' // Default to 'client' if not provided
     })
 
     await newUser.save()
