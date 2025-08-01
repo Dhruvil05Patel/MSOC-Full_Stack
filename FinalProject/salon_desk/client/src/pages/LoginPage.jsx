@@ -12,32 +12,27 @@ function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { setRole, setToken, setUser } = useUser()
+  const { setRole, setToken } = useUser()
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      const res = await axios.post('/users/login', { email, password })
-      const { user, token } = res.data
-
-      // Set all user context values and persist to localStorage
-      setUser(user)
-      setRole(user.role)
-      setToken(token)
-      localStorage.setItem('token', token)
-      localStorage.setItem('role', user.role)
-      localStorage.setItem('user', JSON.stringify(user))
-
-      toast.success(`Welcome, ${user.name}!`)
-      navigate('/dashboard')
-    } catch (err) {
-      toast.error(err?.response?.data?.message || 'Invalid credentials!')
-    } finally {
-      setLoading(false)
-    }
+  e.preventDefault()
+  setLoading(true)
+  try {
+    const res = await axios.post('/users/login', { email, password })
+    const { user, token } = res.data
+    console.log('Login Response:', res.data)
+    localStorage.setItem('token', token)
+    setRole(user.role)
+    setToken(token)
+    toast.success(`Welcome, ${user.name}!`)
+    navigate('/dashboard')
+  } catch (err) {
+    toast.error(err?.response?.data?.message || 'Invalid credentials!')
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <PageWrapper>

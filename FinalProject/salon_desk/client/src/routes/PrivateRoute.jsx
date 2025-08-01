@@ -5,12 +5,10 @@ import { useUser } from '../context/UserContext'
 const PrivateRoute = ({ children, allowedRoles = [] }) => {
   const { token, role } = useUser()
 
-  if (!token) {
-    return <Navigate to="/login" replace />
-  }
+  if (!token) return <Navigate to="/login" replace />
 
-  if (allowedRoles.length && !allowedRoles.includes(role)) {
-    return <Navigate to="/dashboard" replace /> // Fallback to generic dashboard
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    return <Navigate to="/dashboard" replace />  // or a 403 page
   }
 
   return children

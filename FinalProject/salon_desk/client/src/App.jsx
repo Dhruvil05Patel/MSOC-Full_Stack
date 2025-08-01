@@ -9,57 +9,57 @@ import OwnerDashboard from './pages/OwnerDashboard'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import Navbar from './components/Navbar'
+import { useUser } from './context/UserContext'
+import PrivateRoute from './routes/PrivateRoute'
 import GuestRoute from './routes/GuestRoute'
-import { UserProvider, useUser } from './context/UserContext'
 import './App.css'
 
-function DashboardRouter() {
-  const { role } = useUser()
-
-  if (role === 'owner') return <OwnerDashboard />
-  if (role === 'client') return <DashboardPage />
-
-  return <Navigate to="/login" replace />
-}
-
 function App() {
+  const { role } = useUser()
+  const isLoggedIn = !!role
+
   return (
-    <UserProvider>
-      <Router>
-        <Navbar />
-        <Routes>
-          {/* ✅ Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/services" element={<ServicePage />} />
-          <Route path="/stylist" element={<StylistPage />} />
-          <Route path="/appointment" element={<AppointmentPage />} />
+    <Router>
+      <Navbar />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/services" element={<ServicePage />} />
+        <Route path="/stylist" element={<StylistPage />} />
+        <Route path="/appointment" element={<AppointmentPage />} />
 
-          {/* 🔒 Guest-only Routes */}
-          <Route
-            path="/login"
-            element={
-              <GuestRoute>
-                <LoginPage />
-              </GuestRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <GuestRoute>
-                <RegisterPage />
-              </GuestRoute>
-            }
-          />
+        {/* Auth Pages */}
+  <Route
+    path="/login"
+    element={
+      <GuestRoute>
+        <LoginPage />
+      </GuestRoute>
+    }
+  />
+  <Route
+    path="/register"
+    element={
+      <GuestRoute>
+        <RegisterPage />
+      </GuestRoute>
+    }
+  />
 
-          {/* 🧑‍💼 Dashboard Routes (Protected & Role-Based) */}
-          <Route path="/dashboard" element={<DashboardRouter />} />
+        {/* Dashboard Routes (Role Protected) */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute allowedRoles={['owner', 'client']}>
+              {role === 'owner' ? <OwnerDashboard /> : <DashboardPage />}
+            </PrivateRoute>
+          }
+        />
 
-          {/* 🔁 Fallback */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
-    </UserProvider>
+        {/* Catch-all */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
   )
 }
 

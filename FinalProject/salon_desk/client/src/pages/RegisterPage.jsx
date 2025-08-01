@@ -17,14 +17,13 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const { setRole: setUserRole, setToken, setUser } = useUser()
+  const { setRole: setUserRole, setToken } = useUser()
 
   const handleRegister = async (e) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      // Step 1: Register the user
       const registerRes = await axios.post('/users/register', {
         name,
         email,
@@ -37,21 +36,20 @@ function RegisterPage() {
         throw new Error('Registration failed')
       }
 
-      // Step 2: Auto-login after successful registration
       const loginRes = await axios.post('/users/login', {
         email,
         password
       })
 
       const { user, token } = loginRes.data
+      localStorage.setItem('token', token)
+      setUser(user)
       setUserRole(user.role)
       setToken(token)
-      setUser(user)
-
       toast.success(`Welcome, ${user.name}`)
       navigate('/dashboard')
     } catch (err) {
-      console.error('❌ Registration error:', err)
+      console.error('Registration error:', err)
       toast.error(err?.response?.data?.message || err.message || 'Registration failed')
     } finally {
       setLoading(false)
@@ -108,7 +106,7 @@ function RegisterPage() {
             <select
               className="w-full border border-gray-300 rounded-lg p-2"
               value={role}
-              onChange={(e) => setRole(e.target.value)}
+              onChange={e => setRole(e.target.value)}
             >
               <option value="client">Client</option>
               <option value="owner">Owner</option>

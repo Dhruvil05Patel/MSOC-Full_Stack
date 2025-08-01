@@ -4,31 +4,25 @@ import { createContext, useContext, useEffect, useState } from 'react'
 const UserContext = createContext()
 
 export const UserProvider = ({ children }) => {
-  const [role, setRole] = useState(() => localStorage.getItem('role') || null)
-  const [token, setToken] = useState(() => localStorage.getItem('token') || null)
+  const [role, setRole] = useState(localStorage.getItem('role') || null)
+  const [token, setToken] = useState(localStorage.getItem('token') || null)
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user')
     return storedUser ? JSON.parse(storedUser) : null
   })
 
-  // 🔁 Keep localStorage in sync with state
+  // 🔁 Persist all values in localStorage
   useEffect(() => {
-    if (role) localStorage.setItem('role', role)
-    else localStorage.removeItem('role')
-
-    if (token) localStorage.setItem('token', token)
-    else localStorage.removeItem('token')
-
-    if (user) localStorage.setItem('user', JSON.stringify(user))
-    else localStorage.removeItem('user')
+    role ? localStorage.setItem('role', role) : localStorage.removeItem('role')
+    token ? localStorage.setItem('token', token) : localStorage.removeItem('token')
+    user ? localStorage.setItem('user', JSON.stringify(user)) : localStorage.removeItem('user')
   }, [role, token, user])
 
-  // 🔓 Logout function
   const logout = () => {
     setRole(null)
     setToken(null)
     setUser(null)
-    localStorage.clear() // Consider using removeItem only for specific keys
+    localStorage.clear()
   }
 
   return (

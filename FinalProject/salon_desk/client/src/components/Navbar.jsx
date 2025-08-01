@@ -11,9 +11,6 @@ function Navbar() {
   const { role, user, logout } = useUser()
   const navigate = useNavigate()
 
-  const firstName = user?.name?.split(' ')[0] || 'User'
-  const avatarInitial = user?.name?.charAt(0)?.toUpperCase() || 'U'
-
   const handleLogout = () => {
     logout()
     toast.success('Logged out successfully!')
@@ -27,6 +24,9 @@ function Navbar() {
     setIsOpen(false)
     setShowDropdown(false)
   }
+
+  const firstName = user?.name?.split(' ')[0] || 'User'
+  const avatarInitial = user?.name?.charAt(0)?.toUpperCase() || 'U'
 
   return (
     <nav className="relative bg-pink-100 py-4 px-6 flex justify-between items-center shadow z-50">
@@ -46,12 +46,12 @@ function Navbar() {
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="text-pink-600 flex items-center gap-2 border border-pink-300 px-3 py-1 rounded-full hover:bg-pink-200"
+              className="flex items-center gap-2 px-3 py-1 border border-pink-300 rounded-full bg-white hover:bg-pink-200 transition"
             >
               <div className="w-7 h-7 rounded-full bg-pink-500 text-white text-sm font-bold flex items-center justify-center">
                 {avatarInitial}
               </div>
-              <span>{firstName}</span>
+              <span className="text-pink-700 font-medium">{firstName}</span>
               <ChevronDown size={16} />
             </button>
             {showDropdown && (
