@@ -6,6 +6,7 @@ import { createRequire } from 'module'
 import userRoutes from './routes/userRoutes.js'
 import stylistRoutes from './routes/stylistRoutes.js'
 import { initializeCollections } from './utils/initCollection.js'
+import ownerRoutes from './routes/ownerRoutes.js'
 
 const require = createRequire(import.meta.url)
 const cors = require('cors')
@@ -25,6 +26,7 @@ app.use(express.urlencoded({ extended: true }))
 app.get('/', (req, res) => res.send('Salon Desk Backend Running'))
 app.use('/api/users', userRoutes)
 app.use('/api/stylists', stylistRoutes)
+app.use('/api/owner', ownerRoutes)
 
 // 🛢️ MongoDB Connection & Server Start
 mongoose.connect(process.env.MONGODB_URI, {

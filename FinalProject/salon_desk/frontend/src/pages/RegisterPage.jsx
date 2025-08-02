@@ -17,7 +17,7 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const { setRole: setUserRole, setToken } = useUser()
+  const { setRole: setUserRole, setToken, setUser } = useUser()
 
   const handleRegister = async (e) => {
     e.preventDefault()

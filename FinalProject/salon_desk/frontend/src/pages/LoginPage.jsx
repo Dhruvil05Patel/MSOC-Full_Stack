@@ -12,21 +12,22 @@ function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { setRole, setToken } = useUser()
+  const { setRole, setToken, setUser } = useUser()
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {
   e.preventDefault()
   setLoading(true)
   try {
-    const res = await axios.post('/users/login', { email, password })
+    const res = await axios.post('/client/login', { email, password })
     const { user, token } = res.data
     console.log('Login Response:', res.data)
     localStorage.setItem('token', token)
     setRole(user.role)
     setToken(token)
+    setUser(user)
     toast.success(`Welcome, ${user.name}!`)
-    navigate('/dashboard')
+    //navigate('/dashboard')
   } catch (err) {
     toast.error(err?.response?.data?.message || 'Invalid credentials!')
   } finally {
