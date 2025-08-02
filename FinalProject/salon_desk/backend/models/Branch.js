@@ -1,12 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const branchSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true },
   address: String,
-  contactNumber: String,
-  manager: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-});
+  contact: String,
+  manager: String,
+}, {
+  timestamps: true
+})
 
-const Branch = mongoose.model('Branch', branchSchema);
-
-export default Branch; 
+export default mongoose.model('Branch', branchSchema)
