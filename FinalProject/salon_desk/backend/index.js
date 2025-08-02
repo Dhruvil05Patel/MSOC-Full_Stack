@@ -27,9 +27,6 @@ app.use(cors({
   optionsSuccessStatus: 204
 }))
 
-// Handle preflight requests explicitly for Safari
-app.options('*', cors())
-
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
