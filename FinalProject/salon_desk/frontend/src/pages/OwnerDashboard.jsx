@@ -1,6 +1,8 @@
+// src/pages/OwnerDashboard.jsx
 import React, { useState } from 'react'
 import PageWrapper from '../components/pageWrapper'
 import BranchList from './OwnerDashboard/Branches/BranchList'
+import StylistList from './OwnerDashboard/Stylists/StylistList'
 import DashboardOverview from './OwnerDashboard/DashboardOverview'
 
 function OwnerDashboard() {
@@ -10,6 +12,8 @@ function OwnerDashboard() {
     switch (activeTab) {
       case 'branches':
         return <BranchList />
+      case 'stylists':
+        return <StylistList />
       case 'overview':
       default:
         return <DashboardOverview />
@@ -45,6 +49,18 @@ function OwnerDashboard() {
                 }`}
               >
                 Manage Branches
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveTab('stylists')}
+                className={`w-full text-left px-4 py-2 rounded-md ${
+                  activeTab === 'stylists'
+                    ? 'bg-pink-500 text-white'
+                    : 'hover:bg-pink-200'
+                }`}
+              >
+                Manage Stylists
               </button>
             </li>
           </ul>
