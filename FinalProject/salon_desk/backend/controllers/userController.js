@@ -38,16 +38,22 @@ export const registerUser = async (req, res) => {
 
 // POST /api/users/login
 export const loginUser = async (req, res) => {
+  console.log('🔥 Login attempt with:', { email: req.body.email })
   const { email, password } = req.body
 
   try {
     const user = await User.findOne({ email })
     if (!user) {
+      console.log('❌ User not found:', email)
       return res.status(404).json({ message: 'User not found' })
     }
 
+    console.log('✅ User found:', user.email)
     const isMatch = await bcrypt.compare(password, user.password)
+    console.log('🔐 Password match:', isMatch)
+    
     if (!isMatch) {
+      console.log('❌ Invalid password for user:', email)
       return res.status(401).json({ message: 'Invalid credentials' })
     }
 
@@ -57,6 +63,7 @@ export const loginUser = async (req, res) => {
       { expiresIn: '3d' }
     )
 
+    console.log('✅ Login successful for:', email)
     res.status(200).json({
       message: 'Login successful',
       user: {
@@ -69,6 +76,7 @@ export const loginUser = async (req, res) => {
       token,
     })
   } catch (error) {
+    console.error('❌ Login error:', error.message)
     res.status(500).json({ message: 'Server error', error: error.message })
   }
 }
