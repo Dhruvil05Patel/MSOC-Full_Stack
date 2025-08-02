@@ -13,4 +13,10 @@ router.post('/test', (req, res) => {
   res.status(200).json({ message: "Test route works" });
 });
 
+// ✅ Simple GET test route for Safari
+router.get('/test', (req, res) => {
+  console.log("🚀 GET Test route was hit!");
+  res.status(200).json({ message: "GET Test route works", timestamp: new Date().toISOString() });
+});
+
 export default router

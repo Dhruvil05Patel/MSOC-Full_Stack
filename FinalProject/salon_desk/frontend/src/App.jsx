@@ -15,8 +15,15 @@ import GuestRoute from './routes/GuestRoute'
 import './App.css'
 
 function App() {
-  const { role } = useUser()
-  const isLoggedIn = !!role
+  const { role, loading } = useUser()
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-pink-300 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
+  }
 
   return (
     <Router>
@@ -29,22 +36,22 @@ function App() {
         <Route path="/appointment" element={<AppointmentPage />} />
 
         {/* Auth Pages */}
-  <Route
-    path="/login"
-    element={
-      <GuestRoute>
-        <LoginPage />
-      </GuestRoute>
-    }
-  />
-  <Route
-    path="/register"
-    element={
-      <GuestRoute>
-        <RegisterPage />
-      </GuestRoute>
-    }
-  />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestRoute>
+              <RegisterPage />
+            </GuestRoute>
+          }
+        />
 
         {/* Dashboard Routes (Role Protected) */}
         <Route

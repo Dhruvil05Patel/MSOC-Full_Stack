@@ -5,16 +5,20 @@ import Stylist from '../models/Stylist.js'
 
 export const getOwnerDashboard = async (req, res) => {
   try {
-    // Example dummy values, replace with real aggregation if available
-    const totalRevenue = 275000
-    const totalAppointments = 340
-    const totalBranches = 5
+    // 🧮 Aggregated Data
+    const totalRevenue = await Appointment.aggregate([
+      { $group: { _id: null, total: { $sum: "$price" } } }
+    ])
+    const totalAppointments = await Appointment.countDocuments()
+    const totalBranches = await Branch.countDocuments()
 
+    // 🏢 Top Performing Branches (dummy for now)
     const topBranches = [
       { name: 'Éclat Gandhinagar', appointments: 120, revenue: '₹80,000' },
       { name: 'Éclat Ahmedabad', appointments: 95, revenue: '₹70,000' }
     ]
 
+    // 💇 Star Stylists (dummy for now)
     const starStylists = [
       { name: 'Priya Sharma', appointments: 75, rating: 4.9 },
       { name: 'Raj Malhotra', appointments: 65, rating: 4.8 }
@@ -22,7 +26,7 @@ export const getOwnerDashboard = async (req, res) => {
 
     res.status(200).json({
       summary: {
-        revenue: `₹${totalRevenue.toLocaleString()}`,
+        revenue: `₹${totalRevenue[0]?.total?.toLocaleString() || 0}`,
         appointments: totalAppointments,
         branches: totalBranches
       },

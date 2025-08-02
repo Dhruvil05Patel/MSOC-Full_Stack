@@ -6,6 +6,7 @@ import { createRequire } from 'module'
 import userRoutes from './routes/userRoutes.js'
 import stylistRoutes from './routes/stylistRoutes.js'
 import { initializeCollections } from './utils/initCollection.js'
+import ownerRoutes from './routes/ownerRoutes.js'
 
 const require = createRequire(import.meta.url)
 const cors = require('cors')
@@ -17,14 +18,23 @@ const app = express()
 const PORT = process.env.PORT || 5000
 
 // 🔧 Middleware
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}))
+
+app.use(express.json({ limit: '10mb' }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
 // 🌐 Routes
 app.get('/', (req, res) => res.send('Salon Desk Backend Running'))
 app.use('/api/users', userRoutes)
 app.use('/api/stylists', stylistRoutes)
+app.use('/api/owner', ownerRoutes)
 
 // 🛢️ MongoDB Connection & Server Start
 mongoose.connect(process.env.MONGODB_URI, {

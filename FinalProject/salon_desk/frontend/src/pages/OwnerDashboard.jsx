@@ -1,30 +1,55 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import PageWrapper from '../components/pageWrapper'
 import { fadeInUp } from '../animations/motionVariants'
+import axios from '../utils/axios'
 
 function OwnerDashboard() {
-  const summaryStats = [
-    { title: "Total Revenue", value: "₹2,75,000" },
-    { title: "Appointments This Month", value: "340" },
-    { title: "Active Branches", value: "5" },
-  ];
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [data, setData] = useState(null)
 
-  const topBranches = [
-    { name: "Éclat Gandhinagar", appointments: 120, revenue: "₹80,000" },
-    { name: "Éclat Ahmedabad", appointments: 95, revenue: "₹70,000" },
-  ];
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const res = await axios.get('/owner/dashboard')
+        setData(res.data)
+      } catch (err) {
+        console.error('❌ Dashboard fetch error:', err)
+        setError('Failed to load dashboard data')
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  const starStylists = [
-    { name: "Priya Sharma", appointments: 75, rating: 4.9 },
-    { name: "Raj Malhotra", appointments: 65, rating: 4.8 },
-  ];
+    fetchDashboardData()
+  }, [])
+
+  if (loading) {
+    return (
+      <PageWrapper>
+        <div className="flex justify-center items-center h-96">
+          <div className="w-12 h-12 border-4 border-pink-300 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      </PageWrapper>
+    )
+  }
+
+  if (error) {
+    return (
+      <PageWrapper>
+        <div className="text-center text-red-600 mt-20 text-lg font-semibold">
+          {error}
+        </div>
+      </PageWrapper>
+    )
+  }
+
+  const { summary, branches, stylists } = data
 
   return (
     <PageWrapper>
       <div className="py-10 md:py-16 px-4 md:px-8 max-w-7xl mx-auto">
-
-        {/* Heading */}
         <motion.h1
           {...fadeInUp}
           className="text-3xl md:text-4xl font-bold text-center mb-10"
@@ -34,30 +59,17 @@ function OwnerDashboard() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {summaryStats.map((stat, index) => (
-            <motion.div
-              key={index}
-              {...fadeInUp}
-              transition={{ delay: 0.2 + index * 0.2, duration: 0.8 }}
-              className="bg-pink-100 text-pink-900 rounded-xl p-6 md:p-8 text-center shadow-lg"
-            >
-              <h3 className="text-lg font-semibold mb-2">{stat.title}</h3>
-              <p className="text-2xl font-bold">{stat.value}</p>
-            </motion.div>
-          ))}
+          <SummaryCard title="Total Revenue" value={summary.revenue} delay={0.2} />
+          <SummaryCard title="Appointments This Month" value={summary.appointments} delay={0.4} />
+          <SummaryCard title="Active Branches" value={summary.branches} delay={0.6} />
         </div>
 
         {/* Top Branches */}
-        <motion.h2
-          {...fadeInUp}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-2xl font-bold text-pink-500 mb-6"
-        >
+        <motion.h2 {...fadeInUp} transition={{ delay: 0.4, duration: 0.8 }} className="text-2xl font-bold text-pink-500 mb-6">
           Top Performing Branches
         </motion.h2>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {topBranches.map((branch, index) => (
+          {branches.map((branch, index) => (
             <motion.div
               key={index}
               {...fadeInUp}
@@ -72,16 +84,11 @@ function OwnerDashboard() {
         </div>
 
         {/* Star Stylists */}
-        <motion.h2
-          {...fadeInUp}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="text-2xl font-bold text-pink-500 mb-6"
-        >
+        <motion.h2 {...fadeInUp} transition={{ delay: 0.6, duration: 0.8 }} className="text-2xl font-bold text-pink-500 mb-6">
           Star Stylists
         </motion.h2>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {starStylists.map((stylist, index) => (
+          {stylists.map((stylist, index) => (
             <motion.div
               key={index}
               {...fadeInUp}
@@ -94,9 +101,21 @@ function OwnerDashboard() {
             </motion.div>
           ))}
         </div>
-
       </div>
     </PageWrapper>
+  )
+}
+
+function SummaryCard({ title, value, delay }) {
+  return (
+    <motion.div
+      {...fadeInUp}
+      transition={{ delay, duration: 0.8 }}
+      className="bg-pink-100 text-pink-900 rounded-xl p-6 md:p-8 text-center shadow-lg"
+    >
+      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      <p className="text-2xl font-bold">{value}</p>
+    </motion.div>
   )
 }
 

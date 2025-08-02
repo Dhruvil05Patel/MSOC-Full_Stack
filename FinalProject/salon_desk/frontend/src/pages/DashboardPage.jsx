@@ -2,8 +2,19 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import PageWrapper from '../components/pageWrapper'
 import { fadeInUp } from '../animations/motionVariants'
+import { useUser } from '../context/UserContext'
 
 function DashboardPage() {
+  const { user } = useUser()
+
+  if (!user) {
+    return (
+      <PageWrapper>
+        <div className="text-center py-24 font-semibold text-gray-600">Loading user info...</div>
+      </PageWrapper>
+    )
+  }
+
   const upcomingAppointments = [
     {
       service: "Hair Spa",
@@ -37,8 +48,6 @@ function DashboardPage() {
   return (
     <PageWrapper>
       <div className="py-10 md:py-16 px-4 md:px-8 max-w-7xl mx-auto">
-
-        {/* Heading */}
         <motion.h1
           {...fadeInUp}
           className="text-3xl md:text-4xl font-bold text-center mb-10"
@@ -46,16 +55,16 @@ function DashboardPage() {
           Client Dashboard
         </motion.h1>
 
-        {/* Profile Card */}
+        {/* ✅ Dynamic Profile */}
         <motion.div
           {...fadeInUp}
           transition={{ delay: 0.2, duration: 0.8 }}
           className="bg-white shadow-lg rounded-xl p-6 md:p-8 mb-10 text-center"
         >
           <div className="w-24 h-24 mx-auto bg-pink-100 rounded-full mb-4"></div>
-          <h2 className="text-2xl font-bold mb-2">Dhruvil Patel</h2>
-          <p className="text-gray-600">dhruvilpatel@gmail.com</p>
-          <p className="text-gray-600">+91 98765 43210</p>
+          <h2 className="text-2xl font-bold mb-2">{user.name}</h2>
+          <p className="text-gray-600">{user.email}</p>
+          <p className="text-gray-600">{user.phone}</p>
         </motion.div>
 
         {/* Upcoming Appointments */}
