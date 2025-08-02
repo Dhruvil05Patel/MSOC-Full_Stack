@@ -2,14 +2,32 @@
 import Appointment from '../models/Appointment.js'
 import Branch from '../models/Branch.js'
 import Stylist from '../models/Stylist.js'
+import Service from '../models/Service.js'
 
 export const getOwnerDashboard = async (req, res) => {
   try {
-    // 🧮 Aggregated Data
-    const totalRevenue = await Appointment.aggregate([
-      { $group: { _id: null, total: { $sum: "$price" } } }
+    // 🧮 Aggregated Data - Fix revenue calculation by joining with Service
+    const appointmentsWithServices = await Appointment.aggregate([
+      {
+        $lookup: {
+          from: 'services',
+          localField: 'service',
+          foreignField: '_id',
+          as: 'serviceData'
+        }
+      },
+      {
+        $unwind: '$serviceData'
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: '$serviceData.price' },
+          totalAppointments: { $sum: 1 }
+        }
+      }
     ])
-    const totalAppointments = await Appointment.countDocuments()
+
     const totalBranches = await Branch.countDocuments()
 
     // 🏢 Top Performing Branches (dummy for now)
@@ -24,10 +42,12 @@ export const getOwnerDashboard = async (req, res) => {
       { name: 'Raj Malhotra', appointments: 65, rating: 4.8 }
     ]
 
+    const result = appointmentsWithServices[0] || { totalRevenue: 0, totalAppointments: 0 }
+
     res.status(200).json({
       summary: {
-        revenue: `₹${totalRevenue[0]?.total?.toLocaleString() || 0}`,
-        appointments: totalAppointments,
+        revenue: `₹${result.totalRevenue?.toLocaleString() || 0}`,
+        appointments: result.totalAppointments,
         branches: totalBranches
       },
       branches: topBranches,

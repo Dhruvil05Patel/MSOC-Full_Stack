@@ -12,6 +12,7 @@ import Navbar from './components/Navbar'
 import { useUser } from './context/UserContext'
 import PrivateRoute from './routes/PrivateRoute'
 import GuestRoute from './routes/GuestRoute'
+import AddBranchPage from './pages/OwnerDashboard/Branches/AddBranchPage'
 import './App.css'
 
 function App() {
@@ -59,6 +60,14 @@ function App() {
           element={
             <PrivateRoute allowedRoles={['owner', 'client']}>
               {role === 'owner' ? <OwnerDashboard /> : <DashboardPage />}
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/add-branch"
+          element={
+            <PrivateRoute allowedRoles={['owner']}>
+              <AddBranchPage />
             </PrivateRoute>
           }
         />
