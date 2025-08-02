@@ -24,6 +24,8 @@ function RegisterPage() {
     setLoading(true)
 
     try {
+      console.log('🚀 Attempting registration with:', { name, email, phone, role })
+      
       const registerRes = await axios.post('/users/register', {
         name,
         email,
@@ -32,16 +34,21 @@ function RegisterPage() {
         role
       })
 
+      console.log('✅ Registration response:', registerRes.data)
+
       if (registerRes.status !== 201 && registerRes.status !== 200) {
         throw new Error('Registration failed')
       }
 
+      console.log('🔄 Attempting auto-login after registration...')
       const loginRes = await axios.post('/users/login', {
         email,
         password
       })
 
       const { user, token } = loginRes.data
+      console.log('✅ Auto-login successful:', user)
+      
       localStorage.setItem('token', token)
       setUser(user)
       setUserRole(user.role)
@@ -49,8 +56,20 @@ function RegisterPage() {
       toast.success(`Welcome, ${user.name}`)
       navigate('/dashboard')
     } catch (err) {
-      console.error('Registration error:', err)
-      toast.error(err?.response?.data?.message || err.message || 'Registration failed')
+      console.error('❌ Registration error:', err)
+      console.error('❌ Error response:', err.response?.data)
+      console.error('❌ Error status:', err.response?.status)
+      console.error('❌ Error message:', err.message)
+      
+      if (err.code === 'ERR_NETWORK') {
+        toast.error('Network error: Please check if the server is running')
+      } else if (err.response?.status === 400) {
+        toast.error(err.response.data.message || 'Registration failed - check your input')
+      } else if (err.response?.status === 409) {
+        toast.error('User already exists with this email')
+      } else {
+        toast.error(err?.response?.data?.message || err.message || 'Registration failed')
+      }
     } finally {
       setLoading(false)
     }
@@ -112,6 +131,7 @@ function RegisterPage() {
               <option value="owner">Owner</option>
             </select>
           </div>
+          
           <button
             type="submit"
             disabled={loading}

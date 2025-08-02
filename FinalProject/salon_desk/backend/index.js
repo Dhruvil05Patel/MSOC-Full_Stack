@@ -22,10 +22,16 @@ app.use(cors({
   origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }))
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+
+// Handle preflight requests explicitly for Safari
+app.options('*', cors())
+
+app.use(express.json({ limit: '10mb' }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
 // 🌐 Routes
 app.get('/', (req, res) => res.send('Salon Desk Backend Running'))
