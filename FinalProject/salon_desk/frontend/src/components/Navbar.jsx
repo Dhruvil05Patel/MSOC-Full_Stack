@@ -40,9 +40,7 @@ function Navbar() {
         <Link to="/" className="hover:text-pink-500">Home</Link>
         <Link to="/services" className="hover:text-pink-500">Services</Link>
         <Link to="/stylist" className="hover:text-pink-500">Stylists</Link>
-        {role !== 'owner' && (
-          <Link to="/appointment" className="hover:text-pink-500">Book</Link>
-        )}
+        <Link to="/appointment" className="hover:text-pink-500">Book</Link>
 
         {role ? (
           <div className="relative">
@@ -91,9 +89,7 @@ function Navbar() {
           <Link to="/" onClick={() => setIsOpen(false)} className="text-pink-700 font-medium">Home</Link>
           <Link to="/services" onClick={() => setIsOpen(false)} className="text-pink-700 font-medium">Services</Link>
           <Link to="/stylist" onClick={() => setIsOpen(false)} className="text-pink-700 font-medium">Stylists</Link>
-          {role !== 'owner' && (
-            <Link to="/appointment" onClick={() => setIsOpen(false)} className="text-pink-700 font-medium">Book</Link>
-          )}
+          <Link to="/appointment" onClick={() => setIsOpen(false)} className="text-pink-700 font-medium">Book</Link>
 
           {role ? (
             <>

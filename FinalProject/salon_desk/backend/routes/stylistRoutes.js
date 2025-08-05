@@ -1,18 +1,7 @@
 import express from 'express'
-import {
-  getAllStylists,
-  createStylist,
-  updateStylist,
-  deleteStylist,
-  getStylistById
-} from '../controllers/stylistController.js'
-
 const router = express.Router()
 
-router.get('/', getAllStylists)
-router.get('/:id', getStylistById)
-router.post('/', createStylist)
-router.put('/:id', updateStylist)
-router.delete('/:id', deleteStylist)
+// your route handlers here
+router.get('/', (req, res) => res.send('Stylist route works'))
 
-export default router
+export default router  // ✅ this is the key
