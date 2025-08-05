@@ -7,68 +7,33 @@ export const UserProvider = ({ children }) => {
   const [role, setRole] = useState(null)
   const [token, setToken] = useState(null)
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true) // New
 
   // 🔁 Load from localStorage once on mount
   useEffect(() => {
-    try {
-      const storedRole = localStorage.getItem('role')
-      const storedToken = localStorage.getItem('token')
-      const storedUser = localStorage.getItem('user')
+    const storedRole = localStorage.getItem('role')
+    const storedToken = localStorage.getItem('token')
+    const storedUser = localStorage.getItem('user')
 
-      if (storedRole) setRole(storedRole)
-      if (storedToken) setToken(storedToken)
-      if (storedUser) {
-        try {
-          setUser(JSON.parse(storedUser))
-        } catch (e) {
-          console.error('Error parsing stored user:', e)
-          localStorage.removeItem('user')
-        }
-      }
-    } catch (error) {
-      console.error('Error loading from localStorage:', error)
-    } finally {
-      setLoading(false)
-    }
+    if (storedRole) setRole(storedRole)
+    if (storedToken) setToken(storedToken)
+    if (storedUser) setUser(JSON.parse(storedUser))
+
+    setLoading(false)
   }, [])
 
-  // 🔁 Sync to localStorage on change (only after initial load)
+  // 🔁 Sync to localStorage on change
   useEffect(() => {
-    if (!loading) {
-      try {
-        if (role) {
-          localStorage.setItem('role', role)
-        } else {
-          localStorage.removeItem('role')
-        }
-        
-        if (token) {
-          localStorage.setItem('token', token)
-        } else {
-          localStorage.removeItem('token')
-        }
-        
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user))
-        } else {
-          localStorage.removeItem('user')
-        }
-      } catch (error) {
-        console.error('Error saving to localStorage:', error)
-      }
-    }
-  }, [role, token, user, loading])
+    role ? localStorage.setItem('role', role) : localStorage.removeItem('role')
+    token ? localStorage.setItem('token', token) : localStorage.removeItem('token')
+    user ? localStorage.setItem('user', JSON.stringify(user)) : localStorage.removeItem('user')
+  }, [role, token, user])
 
   const logout = () => {
     setRole(null)
     setToken(null)
     setUser(null)
-    try {
-      localStorage.clear()
-    } catch (error) {
-      console.error('Error clearing localStorage:', error)
-    }
+    localStorage.clear()
   }
 
   return (
