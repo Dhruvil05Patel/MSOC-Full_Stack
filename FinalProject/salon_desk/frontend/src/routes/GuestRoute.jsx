@@ -14,7 +14,7 @@ const GuestRoute = ({ children }) => {
     )
   }
   
-  return !token ? children : <Navigate to="/dashboard" replace />
+  return !token && !role ? children : <Navigate to="/dashboard" replace />
 }
 
 export default GuestRoute
