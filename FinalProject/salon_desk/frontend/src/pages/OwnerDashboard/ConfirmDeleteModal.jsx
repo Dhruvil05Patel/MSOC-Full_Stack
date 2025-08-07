@@ -22,14 +22,14 @@ function ConfirmDeleteModal({ name, onClose, onConfirm }) {
           transition={{ delay: 0.5, duration: 0.8 }}
           className="text-xl font-bold mb-4 text-pink-600"
         >
-          Confirm Delete
+          Confirm Remove
         </motion.h3>
         <motion.p 
           {...fadeInUp}
           transition={{ delay: 0.7, duration: 0.8 }}
           className="text-gray-600 mb-6"
         >
-          Are you sure you want to delete <span className="font-semibold text-pink-600">{name}</span>? 
+          Are you sure you want to remove <span className="font-semibold text-pink-600">{name}</span>? 
           This action cannot be undone.
         </motion.p>
         <motion.div 
@@ -47,7 +47,7 @@ function ConfirmDeleteModal({ name, onClose, onConfirm }) {
             onClick={onConfirm}
             className="flex-1 py-3 px-4 bg-pink-500 hover:bg-pink-600 rounded-full text-white transition-colors duration-300 font-medium"
           >
-            Delete
+            Remove
           </button>
         </motion.div>
       </motion.div>

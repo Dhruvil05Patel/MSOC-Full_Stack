@@ -125,7 +125,7 @@ function BranchList() {
                         onClick={() => handleDelete(branch)}
                         className="text-sm px-4 py-2 bg-red-500 hover:bg-red-600 rounded-full text-white transition"
                       >
-                        Delete
+                        Remove
                       </button>
                     </td>
                   </motion.tr>
