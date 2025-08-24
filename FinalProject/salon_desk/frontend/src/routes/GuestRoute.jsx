@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 
 const GuestRoute = ({ children }) => {
-  const { token, loading } = useUser()
+  const { token, role, loading } = useUser()
   
   // Wait for loading to complete before making any decisions
   if (loading) {
@@ -14,7 +14,7 @@ const GuestRoute = ({ children }) => {
     )
   }
   
-  return !token ? children : <Navigate to="/dashboard" replace />
+  return !token && !role ? children : <Navigate to="/dashboard" replace />
 }
 
 export default GuestRoute

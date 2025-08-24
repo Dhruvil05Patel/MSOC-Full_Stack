@@ -206,7 +206,8 @@ function StylistList() {
                         onClick={() => handleDelete(stylist)}
                         className="text-sm px-3 py-1 bg-red-500 hover:bg-red-600 rounded-full text-white transition-colors duration-300 font-medium"
                       >
-                        Delete
+                        Remove
+                        
                       </button>
                     </td>
                   </motion.tr>

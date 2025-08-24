@@ -1,6 +1,9 @@
-import React from 'react'
-import { useState } from "react";
+// src/pages/AppointmentPage.jsx
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
+import axios from "../utils/axios";
+import toast from "react-hot-toast";
 
 function AppointmentPage() {
   const [formData, setFormData] = useState({
@@ -12,18 +15,71 @@ function AppointmentPage() {
     time: "",
   });
 
+  const [services, setServices] = useState([]);
+  const [stylists, setStylists] = useState([]);
+  const [branches, setBranches] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [searchParams] = useSearchParams();
+  const serviceId = searchParams.get("serviceId");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch all services, stylists, branches
+      const [servicesRes, stylistsRes, branchesRes] = await Promise.all([
+        axios.get("/services"),
+        axios.get("/stylists"),
+        axios.get("/branches"),
+      ]);
+
+      setServices(servicesRes.data);
+      setStylists(stylistsRes.data);
+      setBranches(branchesRes.data);
+
+      // If serviceId exists, pre-fill service
+      if (serviceId) {
+        const selectedService = servicesRes.data.find((s) => s._id === serviceId);
+        if (selectedService) {
+          setFormData((prev) => ({ ...prev, service: selectedService._id }));
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch booking data:", err);
+      toast.error("Failed to load booking form data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Booking Submitted:", formData);
+    try {
+      await axios.post("/appointments", formData);
+      toast.success("Appointment booked successfully!");
+      console.log("Booking Submitted:", formData);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to book appointment");
+    }
   };
 
-  const services = ["Haircut", "Facial", "Bridal Makeup", "Hair Spa"];
-  const stylists = ["Priya Sharma", "Raj Malhotra", "Ananya Desai"];
-  const branches = ["Ahmedabad", "Mumbai", "Delhi"];
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="w-12 h-12 border-4 border-pink-300 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-pink-50 min-h-screen py-12 px-4 flex items-center justify-center">
@@ -42,7 +98,6 @@ function AppointmentPage() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Same form inputs as before */}
           {/* Name */}
           <div>
             <label className="block text-sm font-semibold mb-2">Your Name</label>
@@ -68,8 +123,10 @@ function AppointmentPage() {
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
             >
               <option value="">-- Choose a Service --</option>
-              {services.map((s, i) => (
-                <option key={i} value={s}>{s}</option>
+              {services.map((s) => (
+                <option key={s._id} value={s._id}>
+                  {s.name} (₹{s.price}, {s.duration} mins)
+                </option>
               ))}
             </select>
           </div>
@@ -85,8 +142,10 @@ function AppointmentPage() {
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
             >
               <option value="">-- Choose a Stylist --</option>
-              {stylists.map((stylist, i) => (
-                <option key={i} value={stylist}>{stylist}</option>
+              {stylists.map((stylist) => (
+                <option key={stylist._id} value={stylist._id}>
+                  {stylist.name} ({stylist.gender})
+                </option>
               ))}
             </select>
           </div>
@@ -102,8 +161,10 @@ function AppointmentPage() {
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
             >
               <option value="">-- Choose a Branch --</option>
-              {branches.map((branch, i) => (
-                <option key={i} value={branch}>{branch}</option>
+              {branches.map((branch) => (
+                <option key={branch._id} value={branch._id}>
+                  {branch.name} - {branch.address}
+                </option>
               ))}
             </select>
           </div>
@@ -134,7 +195,7 @@ function AppointmentPage() {
             />
           </div>
 
-          {/* Animated Submit Button */}
+          {/* Submit */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -149,4 +210,4 @@ function AppointmentPage() {
   );
 }
 
-export default AppointmentPage
+export default AppointmentPage;

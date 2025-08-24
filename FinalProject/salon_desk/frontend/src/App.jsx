@@ -1,7 +1,7 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import HomePage from './pages/Homepage'
-import ServicePage from './pages/Servicepage'
+import ServicePage from './pages/ServicePage'
 import StylistPage from './pages/StylistPage'
 import AppointmentPage from './pages/AppointmentPage'
 import DashboardPage from './pages/DashboardPage'

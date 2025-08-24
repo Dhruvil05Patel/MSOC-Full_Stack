@@ -7,6 +7,7 @@ import axios from '../../../utils/axios'
 import toast from 'react-hot-toast'
 
 function BranchModal({ initialData = {}, onClose, onSuccess }) {
+  // If initialData is empty, it's an Add; otherwise, it's Edit
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
   const [contact, setContact] = useState('')
@@ -31,17 +32,16 @@ function BranchModal({ initialData = {}, onClose, onSuccess }) {
       if (initialData._id) {
         // Edit
         await axios.put(`/branches/${initialData._id}`, payload)
-        toast.success('Branch updated successfully')
+        toast.success('Branch updated successfully!')
       } else {
         // Add
         await axios.post('/branches', payload)
-        toast.success('Branch added successfully')
+        toast.success('Branch added successfully!')
       }
-
-      onSuccess()
+      if (onSuccess) onSuccess()
+      onClose()
     } catch (err) {
-      console.error('❌ Branch save error:', err)
-      toast.error('Failed to save branch')
+      toast.error(err.response?.data?.message || 'Failed to save branch')
     } finally {
       setLoading(false)
     }
@@ -87,68 +87,60 @@ function BranchModal({ initialData = {}, onClose, onSuccess }) {
             className="space-y-5"
           >
             <div>
-              <label className="block font-semibold mb-2 text-gray-700">Branch Name</label>
+              <label className="block font-medium mb-1">Branch Name</label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all duration-300"
+                required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2"
               />
             </div>
-
             <div>
-              <label className="block font-semibold mb-2 text-gray-700">Address</label>
+              <label className="block font-medium mb-1">Address</label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all duration-300"
+                required
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2"
               />
             </div>
-
             <div>
-              <label className="block font-semibold mb-2 text-gray-700">Contact Number</label>
-              <input
-                type="tel"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all duration-300"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold mb-2 text-gray-700">Manager Name</label>
+              <label className="block font-medium mb-1">Contact</label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all duration-300"
-                value={manager}
-                onChange={(e) => setManager(e.target.value)}
                 required
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2"
               />
             </div>
-
-            <motion.div 
-              {...fadeInUp}
-              transition={{ delay: 0.9, duration: 0.8 }}
-              className="flex space-x-3 pt-4"
-            >
+            <div>
+              <label className="block font-medium mb-1">Manager Name</label>
+              <input
+                type="text"
+                required
+                value={manager}
+                onChange={(e) => setManager(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div className="flex space-x-3 pt-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-3 px-4 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 transition-colors duration-300 font-medium"
+                className="flex-1 py-2 px-4 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className={`flex-1 py-3 rounded-full font-semibold transition-all duration-300 ${
+                className={`flex-1 py-2 rounded-full font-semibold transition ${
                   loading
                     ? 'bg-pink-300 cursor-not-allowed'
-                    : 'bg-pink-500 hover:bg-pink-600 hover:shadow-lg'
+                    : 'bg-pink-500 hover:bg-pink-600'
                 } text-white`}
               >
                 {loading ? (
@@ -160,7 +152,7 @@ function BranchModal({ initialData = {}, onClose, onSuccess }) {
                   initialData._id ? 'Update Branch' : 'Add Branch'
                 )}
               </button>
-            </motion.div>
+            </div>
           </motion.form>
         </div>
       </motion.div>
