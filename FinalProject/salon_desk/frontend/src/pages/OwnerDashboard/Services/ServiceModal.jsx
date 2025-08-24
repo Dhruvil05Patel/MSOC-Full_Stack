@@ -153,15 +153,21 @@ function ServiceModal({ initialData, onClose, onSuccess }) {
             </div>
 
             <div>
-              <label className="block font-semibold mb-2 text-gray-700">Category</label>
-              <input
-                name="category"
-                type="text"
-                value={form.category}
-                onChange={handleChange}
-                placeholder="e.g., Hair, Skin, Nails"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent"
-              />
+              <div>
+  <label className="block font-semibold mb-2 text-gray-700">Category</label>
+  <select
+    name="category"
+    value={form.category}
+    onChange={handleChange}
+    required
+    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent"
+  >
+    <option value="">Select Category</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="unisex">Unisex</option>
+  </select>
+</div>
             </div>
 
             <div>

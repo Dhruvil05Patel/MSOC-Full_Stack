@@ -8,6 +8,8 @@ import stylistRoutes from './routes/stylistRoutes.js'
 import { initializeCollections } from './utils/initCollection.js'
 import ownerRoutes from './routes/ownerRoutes.js'
 import branchRoutes from './routes/branchRoutes.js'
+import serviceRoutes from './routes/serviceRoutes.js'
+import dashboardRoutes from "./routes/dashboardRoutes.js"
 
 const require = createRequire(import.meta.url)
 const cors = require('cors')
@@ -35,8 +37,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.get('/', (req, res) => res.send('Salon Desk Backend Running'))
 app.use('/api/users', userRoutes)
 app.use('/api/stylists', stylistRoutes)
+app.use('/api/services', serviceRoutes)
 app.use('/api/owner', ownerRoutes)
 app.use('/api/branches', branchRoutes)
+app.use("/api/dashboard", dashboardRoutes)
 
 // 🛢️ MongoDB Connection & Server Start
 mongoose.connect(process.env.MONGODB_URI, {
