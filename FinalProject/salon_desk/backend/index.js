@@ -10,6 +10,7 @@ import ownerRoutes from './routes/ownerRoutes.js'
 import branchRoutes from './routes/branchRoutes.js'
 import serviceRoutes from './routes/serviceRoutes.js'
 import dashboardRoutes from "./routes/dashboardRoutes.js"
+import appointmentRoutes from "./routes/appointmentRoutes.js"
 
 const require = createRequire(import.meta.url)
 const cors = require('cors')
@@ -41,18 +42,21 @@ app.use('/api/services', serviceRoutes)
 app.use('/api/owner', ownerRoutes)
 app.use('/api/branches', branchRoutes)
 app.use("/api/dashboard", dashboardRoutes)
+app.use("/api/appointments", appointmentRoutes)
 
 // 🛢️ MongoDB Connection & Server Start
 mongoose.connect(process.env.MONGODB_URI, {
-  dbName: 'SalonDesk'
+  dbName: 'SalonDesk',
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
-  .then(async () => {
-    console.log('✅ MongoDB connected')
-    await initializeCollections() // Optional seeding
+   .then(async () => {
+    console.log("✅ MongoDB connected")
+    await initializeCollections()
     app.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}`)
     })
   })
   .catch(err => {
-    console.error('❌ MongoDB connection error:', err)
+    console.error("❌ MongoDB connection error:", err)
   })

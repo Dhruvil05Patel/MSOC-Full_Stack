@@ -1,11 +1,13 @@
 // src/pages/AppointmentPage.jsx
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
 import toast from "react-hot-toast";
+import { useUser } from "../context/UserContext";
 
 function AppointmentPage() {
+  const { user } = useUser();
   const [formData, setFormData] = useState({
     name: "",
     service: "",
@@ -14,7 +16,8 @@ function AppointmentPage() {
     date: "",
     time: "",
   });
-
+  const navigate = useNavigate();
+  
   const [services, setServices] = useState([]);
   const [stylists, setStylists] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -64,9 +67,19 @@ function AppointmentPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/appointments", formData);
+      await axios.post("/appointments", {
+      client: user.id, // <-- send user ID
+      service: formData.service,
+      stylist: formData.stylist,
+      branch: formData.branch,
+      date: formData.date,
+      time: formData.time,
+    });
       toast.success("Appointment booked successfully!");
       console.log("Booking Submitted:", formData);
+      setTimeout(() => {
+        navigate("/client/dashboard");
+      }, 1000);
     } catch (err) {
       console.error(err);
       toast.error("Failed to book appointment");

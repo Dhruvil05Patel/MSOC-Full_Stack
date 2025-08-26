@@ -153,6 +153,11 @@ function StylistPage() {
                     {stylist.experience} years experience
                   </p>
                 )}
+                {stylist.experience && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      "{stylist.bio}"
+                    </p>
+                  )}
                 {stylist.branch?.name && (
                   <p className="text-sm text-pink-600 font-medium">
                     {stylist.branch.name}
@@ -203,6 +208,11 @@ function StylistPage() {
                   {stylist.experience && (
                     <p className="text-sm text-gray-500 mb-2">
                       {stylist.experience} years experience
+                    </p>
+                  )}
+                  {stylist.experience && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      "{stylist.bio}"
                     </p>
                   )}
                   {stylist.branch?.name && (
@@ -256,6 +266,11 @@ function StylistPage() {
                   {stylist.experience && (
                     <p className="text-sm text-gray-500 mb-2">
                       {stylist.experience} years experience
+                    </p>
+                  )}
+                  {stylist.experience && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      "{stylist.bio}"
                     </p>
                   )}
                   {stylist.branch?.name && (
