@@ -1,49 +1,49 @@
 // src/pages/OwnerDashboard/Appointments/AppointmentList.jsx
-import React, { useEffect, useState } from "react"
-import axios from "../../../utils/axios"
-import toast from "react-hot-toast"
+import React, { useEffect, useState } from "react";
+import axios from "../../../utils/axios";
+import toast from "react-hot-toast";
 
 function AppointmentList() {
-  const [appointments, setAppointments] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAppointments()
-  }, [])
+    fetchAppointments();
+  }, []);
 
   const fetchAppointments = async () => {
     try {
-      setLoading(true)
-      const res = await axios.get("/appointments")
-      setAppointments(res.data.data || [])
+      setLoading(true);
+      const res = await axios.get("/appointments");
+      setAppointments(res.data.data || []);
     } catch (err) {
-      toast.error("Failed to load appointments")
+      toast.error("Failed to load appointments");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.put(`/appointments/${id}/status`, { status })
-      toast.success("Status updated")
-      fetchAppointments()
+      await axios.put(`/appointments/${id}/status`, { status });
+      toast.success("Status updated");
+      fetchAppointments();
     } catch {
-      toast.error("Failed to update status")
+      toast.error("Failed to update status");
     }
-  }
+  };
 
   const deleteAppointment = async (id) => {
     try {
-      await axios.delete(`/appointments/${id}`)
-      toast.success("Appointment deleted")
-      setAppointments((prev) => prev.filter((a) => a._id !== id))
+      await axios.delete(`/appointments/${id}`);
+      toast.success("Appointment deleted");
+      setAppointments((prev) => prev.filter((a) => a._id !== id));
     } catch {
-      toast.error("Failed to delete appointment")
+      toast.error("Failed to delete appointment");
     }
-  }
+  };
 
-  if (loading) return <p>Loading appointments...</p>
+  if (loading) return <p>Loading appointments...</p>;
 
   return (
     <div>
@@ -64,29 +64,55 @@ function AppointmentList() {
         <tbody>
           {appointments.map((appt) => (
             <tr key={appt._id} className="text-center border-t">
-              <td className="px-4 py-2">{appt.client?.name || "N/A"}</td>
+              <td className="px-4 py-2">
+                {appt.client?.name || appt.guestName || "N/A"}
+              </td>
               <td className="px-4 py-2">{appt.stylist?.name || "N/A"}</td>
               <td className="px-4 py-2">{appt.service?.name || "N/A"}</td>
               <td className="px-4 py-2">
                 {new Date(appt.date).toLocaleDateString()}
               </td>
-              <td className="px-4 py-2">{appt.status}</td>
+
+              {/* Status Column */}
+              <td className="px-4 py-2">
+                {appt.status === "pending" && (
+                  <span className="px-2 py-1 bg-gray-300 text-gray-800 rounded">
+                    Pending
+                  </span>
+                )}
+                {appt.status === "completed" && (
+                  <span className="px-2 py-1 bg-green-500 text-white rounded">
+                    Completed
+                  </span>
+                )}
+                {appt.status === "cancelled" && (
+                  <span className="px-2 py-1 bg-yellow-500 text-white rounded">
+                    Cancelled
+                  </span>
+                )}
+              </td>
+
+              {/* Actions Column */}
               <td className="px-4 py-2 space-x-2">
-                <button
-                  onClick={() => updateStatus(appt._id, "completed")}
-                  className="px-2 py-1 bg-green-500 text-white rounded"
-                >
-                  Complete
-                </button>
-                <button
-                  onClick={() => updateStatus(appt._id, "cancelled")}
-                  className="px-2 py-1 bg-yellow-500 text-white rounded"
-                >
-                  Cancel
-                </button>
+                {(appt.status === "pending" || appt.status === "booked") && (
+                  <>
+                    <button
+                      onClick={() => updateStatus(appt._id, "completed")}
+                      className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                    >
+                      Complete
+                    </button>
+                    <button
+                      onClick={() => updateStatus(appt._id, "cancelled")}
+                      className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
                 <button
                   onClick={() => deleteAppointment(appt._id)}
-                  className="px-2 py-1 bg-red-500 text-white rounded"
+                  className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                 >
                   Delete
                 </button>
@@ -96,7 +122,7 @@ function AppointmentList() {
         </tbody>
       </table>
     </div>
-  )
+  );
 }
 
-export default AppointmentList
+export default AppointmentList;

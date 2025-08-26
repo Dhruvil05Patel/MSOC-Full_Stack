@@ -52,21 +52,31 @@ export const getAppointmentsByStylist = async (req, res) => {
 // ✅ Create a new appointment
 export const createAppointment = async (req, res) => {
   try {
-    const { client, stylist, service, date, time } = req.body
+    const { client, guestName, service, stylist, branch, date, time } = req.body;
 
-    if (!client || !stylist || !service || !date || !time) {
-      return res.status(400).json({ success: false, message: "Missing fields" })
+    if ((!client && !guestName) || !service || !stylist || !branch || !date || !time) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
-    const appointment = new Appointment({ client, stylist, service, date, time })
-    await appointment.save()
+    const appointment = new Appointment({
+      client: client || undefined,
+      guestName: guestName || undefined,
+      service,
+      stylist,
+      branch,
+      date,
+      time,
+      status: "booked",
+    });
 
-    res.status(201).json({ success: true, data: appointment })
+    await appointment.save();
+
+    res.status(201).json({ success: true, data: appointment });
   } catch (err) {
-    console.error("❌ Error creating appointment:", err)
-    res.status(500).json({ success: false, message: "Server error" })
+    console.error("❌ Error creating appointment:", err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
-}
+};
 
 // ✅ Update appointment status
 export const updateAppointmentStatus = async (req, res) => {

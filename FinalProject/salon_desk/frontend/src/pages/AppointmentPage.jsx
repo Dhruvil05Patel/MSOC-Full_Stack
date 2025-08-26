@@ -66,15 +66,20 @@ function AppointmentPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post("/appointments", {
-      client: user.id, // <-- send user ID
+    const payload = {
       service: formData.service,
       stylist: formData.stylist,
       branch: formData.branch,
       date: formData.date,
       time: formData.time,
-    });
+    };
+    if (user) {
+      payload.client = user.id;
+    } else {
+      payload.guestName = formData.name;
+    }
+    try {
+      await axios.post("/appointments", payload);
       toast.success("Appointment booked successfully!");
       console.log("Booking Submitted:", formData);
       setTimeout(() => {
