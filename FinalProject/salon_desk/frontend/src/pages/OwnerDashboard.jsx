@@ -3,8 +3,9 @@ import React, { useState } from "react"
 import PageWrapper from "../components/pageWrapper"
 import BranchList from "./OwnerDashboard/Branches/BranchList"
 import StylistList from "./OwnerDashboard/Stylists/StylistList"
-import DashboardOverview from "./OwnerDashboard/DashboardOverview"
+import DashboardOverview from "./OwnerDashboard/DashboardOverview/DashboardOverview"
 import ServiceList from "./OwnerDashboard/Services/ServiceList"
+import AppointmentList from "./OwnerDashboard/Appointments/AppointmentList"
 
 function OwnerDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
@@ -14,6 +15,7 @@ function OwnerDashboard() {
     { key: "branches", label: "Manage Branches" },
     { key: "stylists", label: "Manage Stylists" },
     { key: "services", label: "Manage Services" },
+    { key: "appointments", label: "Manage Appointments" },
   ]
 
   const renderContent = () => {
@@ -24,6 +26,8 @@ function OwnerDashboard() {
         return <StylistList />
       case "services":
         return <ServiceList />
+      case "appointments":
+        return <AppointmentList/>
       case "overview":
       default:
         return <DashboardOverview />

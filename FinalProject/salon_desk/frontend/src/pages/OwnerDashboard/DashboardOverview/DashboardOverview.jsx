@@ -1,8 +1,8 @@
 // src/pages/OwnerDashboard/DashboardOverview.jsx
 import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { fadeInUp } from "../../animations/motionVariants"
-import axios from "../../utils/axios"
+import { fadeInUp } from "../../../animations/motionVariants"
+import axios from "../../../utils/axios"
 import toast from "react-hot-toast"
 import {
   LineChart,
