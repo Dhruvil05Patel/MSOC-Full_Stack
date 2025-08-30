@@ -130,7 +130,6 @@ router.get("/client/:id", async (req, res) => {
       .populate("service", "name price")
       .sort({ date: 1 })
 
-    console.log("Appointments found:", appointments.length)
     const now = new Date()
     const upcoming = appointments.filter(a => new Date(a.date) >= now && a.status === "booked")
     const history = appointments.filter(a => new Date(a.date) < now || a.status !== "booked")
