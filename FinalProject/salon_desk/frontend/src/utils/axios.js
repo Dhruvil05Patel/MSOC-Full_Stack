@@ -3,13 +3,13 @@ import axios from "axios"
 
 // Base URL should ideally come from env vars for prod/dev flexibility
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api",
+  baseURL: 'http://localhost:3000/api',
   headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
-  withCredentials: true, // allow cookies if your backend sets them
-  timeout: 10000, // 10s timeout
+  withCredentials: true,
+  timeout: 10000,
 })
 
 // ✅ Request interceptor

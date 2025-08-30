@@ -6,6 +6,7 @@ import { fadeInUp } from '../animations/motionVariants'
 import axios from '../utils/axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from '../context/UserContext' // <-- import useUser
 
 function ServicePage() {
   const [services, setServices] = useState([])
@@ -13,6 +14,7 @@ function ServicePage() {
   const [filter, setFilter] = useState('all') // all, male, female, unisex
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
+  const { user } = useUser() // <-- get user from context
 
   useEffect(() => {
     fetchServices()
@@ -165,7 +167,11 @@ function ServicePage() {
                 <p className="text-gray-500 text-sm">Duration: {service.duration} mins</p>
                 {/* Book Now Button */}
                 <button
-                  onClick={() => navigate(`/appointments/new?serviceId=${service._id}`)}
+                  onClick={() =>
+                    user
+                      ? navigate(`/appointments/new?serviceId=${service._id}`)
+                      : navigate('/register')
+                  }
                   className="mt-4 bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition-colors duration-300 font-medium"
                 >
                   Book Now

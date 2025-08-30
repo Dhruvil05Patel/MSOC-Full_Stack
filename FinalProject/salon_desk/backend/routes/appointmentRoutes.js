@@ -120,6 +120,32 @@ router.get("/past", async (req, res) => {
   }
 });
 
+// Get all appointments for a specific client
+router.get("/client/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    console.log("Fetching appointments for client id:", id)
+    const appointments = await Appointment.find({ client: id })
+      .populate("stylist", "name specialty")
+      .populate("service", "name price")
+      .sort({ date: 1 })
+
+    console.log("Appointments found:", appointments.length)
+    const now = new Date()
+    const upcoming = appointments.filter(a => new Date(a.date) >= now && a.status === "booked")
+    const history = appointments.filter(a => new Date(a.date) < now || a.status !== "booked")
+
+    res.json({
+      success: true,
+      upcoming,
+      history,
+    })
+  } catch (err) {
+    console.error("Error in /client/:id route:", err)
+    res.status(500).json({ success: false, message: "Failed to fetch appointments" })
+  }
+})
+
 // ==================== UPDATE ==================== //
 
 // @PUT /api/appointments/:id/status
