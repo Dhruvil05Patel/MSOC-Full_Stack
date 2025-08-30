@@ -181,7 +181,7 @@ function HomePage() {
             <div>
               <h4 className="font-semibold text-white mb-3">Contact</h4>
               <p className="text-gray-400 text-sm">📍 123 Elegance Street, Gandhinagar</p>
-              <p className="text-gray-400 text-sm">📞 +91 98765 43210</p>
+              <p className="text-gray-400 text-sm">📞 +91 12345 67890</p>
               <p className="text-gray-400 text-sm">✉️ support@eclatbeauty.com</p>
             </div>
           </div>
