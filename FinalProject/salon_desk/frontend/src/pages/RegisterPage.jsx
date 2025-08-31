@@ -13,7 +13,7 @@ function RegisterPage() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
-  const [role, setRole] = useState('client')
+  const [role] = useState('client')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -120,17 +120,7 @@ function RegisterPage() {
               required
             />
           </div>
-          <div>
-            <label className="block font-semibold mb-1">Role</label>
-            <select
-              className="w-full border border-gray-300 rounded-lg p-2"
-              value={role}
-              onChange={e => setRole(e.target.value)}
-            >
-              <option value="client">Client</option>
-              <option value="owner">Owner</option>
-            </select>
-          </div>
+          <input type="hidden" value="client" />
           
           <button
             type="submit"
