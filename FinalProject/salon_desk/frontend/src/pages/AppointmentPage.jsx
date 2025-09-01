@@ -17,44 +17,83 @@ function AppointmentPage() {
     time: "",
   });
   const navigate = useNavigate();
-  
+
+  const [branches, setBranches] = useState([]);
   const [services, setServices] = useState([]);
   const [stylists, setStylists] = useState([]);
-  const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [availableTimes, setAvailableTimes] = useState([
+    "10:00", "10:30", "11:00", "11:30", "12:00",
+    "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00",
+  ]);
 
   const [searchParams] = useSearchParams();
   const serviceId = searchParams.get("serviceId");
 
+  // Fetch branches on mount
   useEffect(() => {
-    fetchData();
+    fetchBranches();
   }, []);
 
-  const fetchData = async () => {
+  // Fetch services when branch changes
+  useEffect(() => {
+    if (formData.branch) {
+      fetchServices(formData.branch);
+      setFormData((prev) => ({ ...prev, service: "", stylist: "" })); // reset service & stylist
+      setStylists([]); // reset stylists
+    }
+  }, [formData.branch]);
+
+  // Fetch stylists when branch or service changes
+  useEffect(() => {
+    if (formData.branch && formData.service) {
+      fetchStylists(formData.branch, formData.service);
+      setFormData((prev) => ({ ...prev, stylist: "" })); // reset stylist
+    }
+  }, [formData.branch, formData.service]);
+
+  // Pre-fill service if serviceId is in URL
+  useEffect(() => {
+    if (serviceId && services.length > 0) {
+      const selectedService = services.find((s) => s._id === serviceId);
+      if (selectedService) {
+        setFormData((prev) => ({ ...prev, service: selectedService._id }));
+      }
+    }
+  }, [serviceId, services]);
+
+  const fetchBranches = async () => {
     try {
       setLoading(true);
-
-      // Fetch all services, stylists, branches
-      const [servicesRes, stylistsRes, branchesRes] = await Promise.all([
-        axios.get("/services"),
-        axios.get("/stylists"),
-        axios.get("/branches"),
-      ]);
-
-      setServices(servicesRes.data);
-      setStylists(stylistsRes.data);
-      setBranches(branchesRes.data);
-
-      // If serviceId exists, pre-fill service
-      if (serviceId) {
-        const selectedService = servicesRes.data.find((s) => s._id === serviceId);
-        if (selectedService) {
-          setFormData((prev) => ({ ...prev, service: selectedService._id }));
-        }
-      }
+      const res = await axios.get("/branches");
+      setBranches(res.data);
     } catch (err) {
-      console.error("Failed to fetch booking data:", err);
-      toast.error("Failed to load booking form data");
+      toast.error("Failed to load branches");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchServices = async (branchId) => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`/branches/${branchId}/services`);
+      setServices(res.data);
+    } catch (err) {
+      toast.error("Failed to load services");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchStylists = async (branchId, serviceId) => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`/branches/${branchId}/stylists?serviceId=${serviceId}`);
+      setStylists(res.data);
+    } catch (err) {
+      toast.error("Failed to load stylists");
     } finally {
       setLoading(false);
     }
@@ -64,8 +103,48 @@ function AppointmentPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleBranchChange = (e) => {
+    setFormData({
+      ...formData,
+      branch: e.target.value,
+      service: "",
+      stylist: "",
+    });
+    setServices([]);
+    setStylists([]);
+  };
+
+  const handleServiceChange = (e) => {
+    setFormData({
+      ...formData,
+      service: e.target.value,
+      stylist: "",
+    });
+    setStylists([]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check for existing appointment (frontend check)
+    try {
+      const res = await axios.get('/appointments', {
+        params: {
+          client: user.id,
+          branch: formData.branch,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+        }
+      });
+      if (res.data.length > 0) {
+        toast.error("You already have an appointment for this service at this time.");
+        return;
+      }
+    } catch (err) {
+      // Optionally handle error
+    }
+
     const payload = {
       service: formData.service,
       stylist: formData.stylist,
@@ -81,12 +160,10 @@ function AppointmentPage() {
     try {
       await axios.post("/appointments", payload);
       toast.success("Appointment booked successfully!");
-      console.log("Booking Submitted:", formData);
       setTimeout(() => {
         navigate("/client/dashboard");
       }, 1000);
     } catch (err) {
-      console.error(err);
       toast.error("Failed to book appointment");
     }
   };
@@ -101,7 +178,6 @@ function AppointmentPage() {
 
   return (
     <div className="bg-pink-50 min-h-screen py-12 px-4 flex items-center justify-center">
-      {/* Animated Form Card */}
       <motion.div
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
@@ -116,18 +192,23 @@ function AppointmentPage() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name */}
+          {/* Branch */}
           <div>
-            <label className="block text-sm font-semibold mb-2">Your Name</label>
-            <input
-              type="text"
-              name="name"
+            <label className="block text-sm font-semibold mb-2">Select Branch</label>
+            <select
+              name="branch"
               required
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
+              value={formData.branch}
+              onChange={handleBranchChange}
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
-            />
+            >
+              <option value="">-- Choose a Branch --</option>
+              {branches.map((branch) => (
+                <option key={branch._id} value={branch._id}>
+                  {branch.name} - {branch.address}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Service */}
@@ -137,7 +218,8 @@ function AppointmentPage() {
               name="service"
               required
               value={formData.service}
-              onChange={handleChange}
+              onChange={handleServiceChange}
+              disabled={!formData.branch}
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
             >
               <option value="">-- Choose a Service --</option>
@@ -157,6 +239,7 @@ function AppointmentPage() {
               required
               value={formData.stylist}
               onChange={handleChange}
+              disabled={!formData.service}
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
             >
               <option value="">-- Choose a Stylist --</option>
@@ -168,24 +251,21 @@ function AppointmentPage() {
             </select>
           </div>
 
-          {/* Branch */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Select Branch</label>
-            <select
-              name="branch"
-              required
-              value={formData.branch}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
-            >
-              <option value="">-- Choose a Branch --</option>
-              {branches.map((branch) => (
-                <option key={branch._id} value={branch._id}>
-                  {branch.name} - {branch.address}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Name (for guests) */}
+          {!user && (
+            <div>
+              <label className="block text-sm font-semibold mb-2">Your Name</label>
+              <input
+                type="text"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
+              />
+            </div>
+          )}
 
           {/* Date */}
           <div>
@@ -196,21 +276,37 @@ function AppointmentPage() {
               required
               value={formData.date}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
+              min={new Date().toISOString().split("T")[0]}
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none bg-white"
+              style={{ fontSize: "1rem" }}
             />
           </div>
 
-          {/* Time */}
+          {/* Time Slot */}
           <div>
             <label className="block text-sm font-semibold mb-2">Time Slot</label>
-            <input
-              type="time"
-              name="time"
-              required
-              value={formData.time}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
-            />
+            <div className="grid grid-cols-3 gap-3">
+              {availableTimes.map((slot) => (
+                <button
+                  type="button"
+                  key={slot}
+                  onClick={() => setFormData({ ...formData, time: slot })}
+                  className={`py-2 rounded-lg border transition 
+                    ${formData.time === slot
+                      ? "bg-pink-500 text-white border-pink-500"
+                      : "bg-white text-pink-700 border-pink-200 hover:bg-pink-100"}`}
+                >
+                  {slot}
+                </button>
+              ))}
+            </div>
+            {/* Hidden input to keep formData.time in sync for form submission */}
+            <input type="hidden" name="time" value={formData.time} />
+            {formData.time && (
+              <div className="mt-2 text-pink-600 text-sm">
+                Selected: <span className="font-bold">{formData.time}</span>
+              </div>
+            )}
           </div>
 
           {/* Submit */}

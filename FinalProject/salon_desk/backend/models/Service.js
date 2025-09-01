@@ -11,7 +11,7 @@ const serviceSchema = new mongoose.Schema(
       enum: ["male", "female", "unisex"],
       required: true,
     },
-    branch: { type: mongoose.Schema.Types.ObjectId, ref: "Branch" }, // optional if service tied to branch
+    branch: { type: mongoose.Schema.Types.ObjectId, ref: "Branch", required: true }, // make required for strict association
   },
   { timestamps: true }
 );

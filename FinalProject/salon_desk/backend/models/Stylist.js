@@ -11,7 +11,8 @@ const stylistSchema = new mongoose.Schema({
   experience: { type: Number, min: 0, max: 50, default: 0 },
   bio: String,
   isActive: { type: Boolean, default: true },
-  joinDate: { type: Date, default: Date.now }
+  joinDate: { type: Date, default: Date.now },
+  services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }] // services this stylist can perform
 }, {
   timestamps: true
 });

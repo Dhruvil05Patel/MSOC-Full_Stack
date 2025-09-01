@@ -52,6 +52,17 @@ export const getAppointmentsByStylist = async (req, res) => {
 // ✅ Create a new appointment
 export const createAppointment = async (req, res) => {
   try {
+    const exists = await Appointment.findOne({
+      client: req.body.client,
+      branch: req.body.branch,
+      service: req.body.service,
+      date: req.body.date,
+      time: req.body.time,
+    });
+    if (exists) {
+      return res.status(400).json({ message: "You already have an appointment for this service at this time." });
+    }
+
     const { client, guestName, service, stylist, branch, date, time } = req.body;
 
     if ((!client && !guestName) || !service || !stylist || !branch || !date || !time) {
