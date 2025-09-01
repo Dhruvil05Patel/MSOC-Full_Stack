@@ -1,10 +1,23 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { fadeInUp, fadeIn } from '../animations/motionVariants'
 import PageWrapper from '../components/pageWrapper'
+import { useUser } from '../context/UserContext'
 
 function HomePage() {
+  const navigate = useNavigate()
+  const { user } = useUser()
+
+  // Handler for Book Appointment button
+  const handleBookAppointment = () => {
+    if (user) {
+      navigate('/appointment')
+    } else {
+      navigate('/register')
+    }
+  }
+
   return (
     <PageWrapper>
       <div className="text-gray-800">
@@ -31,11 +44,12 @@ function HomePage() {
             transition={{ delay: 0.5 }}
             className="flex justify-center space-x-4"
           >
-            <Link to="/appointment">
-              <button className="bg-pink-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-pink-600 transition">
-                Book Appointment
-              </button>
-            </Link>
+            <button
+              className="bg-pink-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-pink-600 transition"
+              onClick={handleBookAppointment}
+            >
+              Book Appointment
+            </button>
             <Link to="/services">
               <button className="bg-white text-pink-600 border border-pink-500 px-6 py-3 rounded-full font-semibold hover:bg-pink-50 transition">
                 Explore Services
@@ -148,11 +162,12 @@ function HomePage() {
           <motion.h2 {...fadeInUp} className="text-3xl md:text-4xl font-bold mb-6">
             Ready to Glow with Éclat?
           </motion.h2>
-          <Link to="/register">
-            <button className="bg-white text-pink-600 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition">
-              Book Your Appointment Today
-            </button>
-          </Link>
+          <button
+            className="bg-white text-pink-600 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition"
+            onClick={handleBookAppointment}
+          >
+            Book Your Appointment Today
+          </button>
         </section>
 
         {/* Footer with Quick Links */}
