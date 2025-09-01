@@ -148,7 +148,7 @@ function HomePage() {
           <motion.h2 {...fadeInUp} className="text-3xl md:text-4xl font-bold mb-6">
             Ready to Glow with Éclat?
           </motion.h2>
-          <Link to="/appointment">
+          <Link to="/register">
             <button className="bg-white text-pink-600 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition">
               Book Your Appointment Today
             </button>
