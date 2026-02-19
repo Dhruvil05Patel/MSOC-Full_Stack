@@ -11,11 +11,11 @@ function OwnerDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
 
   const menuItems = [
-    { key: "overview", label: "Dashboard Overview" },
-    { key: "branches", label: "Manage Branches" },
-    { key: "stylists", label: "Manage Stylists" },
-    { key: "services", label: "Manage Services" },
-    { key: "appointments", label: "Manage Appointments" },
+    { key: "overview", label: "Overview" },
+    { key: "branches", label: "Branches" },
+    { key: "stylists", label: "Stylists" },
+    { key: "services", label: "Services" },
+    { key: "appointments", label: "Appointments" },
   ]
 
   const renderContent = () => {
@@ -27,7 +27,7 @@ function OwnerDashboard() {
       case "services":
         return <ServiceList />
       case "appointments":
-        return <AppointmentList/>
+        return <AppointmentList />
       case "overview":
       default:
         return <DashboardOverview />
@@ -36,21 +36,23 @@ function OwnerDashboard() {
 
   return (
     <PageWrapper>
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col md:flex-row min-h-screen text-[#F4F4F5]">
         {/* Sidebar */}
-        <aside className="w-full md:w-1/4 bg-pink-100 p-4 md:min-h-screen">
-          <h2 className="text-xl font-bold text-pink-600 mb-6">Owner Panel</h2>
+        <aside className="w-full md:w-1/4 border-b md:border-b-0 md:border-r border-[#27272A] bg-[#121212] p-8">
+          <h2 className="text-4xl lg:text-5xl font-black text-[#E63946] mb-12 uppercase tracking-tighter">
+            Owner <br />
+            <span className="text-[#F4F4F5]">Panel</span>
+          </h2>
           <nav>
-            <ul className="space-y-2">
+            <ul className="space-y-4">
               {menuItems.map((item) => (
                 <li key={item.key}>
                   <button
                     onClick={() => setActiveTab(item.key)}
-                    className={`w-full text-left px-4 py-2 rounded-md transition ${
-                      activeTab === item.key
-                        ? "bg-pink-500 text-white"
-                        : "hover:bg-pink-200"
-                    }`}
+                    className={`w-full text-left px-6 py-4 rounded-none transition-colors border text-lg uppercase font-bold tracking-widest ${activeTab === item.key
+                        ? "bg-[#E63946] text-[#F4F4F5] border-[#E63946]"
+                        : "bg-transparent text-[#a1a1aa] border-[#27272A] hover:border-[#F4F4F5] hover:text-[#F4F4F5]"
+                      }`}
                   >
                     {item.label}
                   </button>
@@ -61,7 +63,7 @@ function OwnerDashboard() {
         </aside>
 
         {/* Main Content */}
-        <main className="w-full md:w-3/4 p-4 md:p-8 bg-gray-50 rounded-lg shadow-inner">
+        <main className="w-full md:w-3/4 md:p-12 bg-[#1C1C1C]">
           {renderContent()}
         </main>
       </div>

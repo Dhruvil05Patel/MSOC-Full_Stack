@@ -9,200 +9,199 @@ function HomePage() {
   const navigate = useNavigate()
   const { user } = useUser()
 
-  // Handler for Book Appointment button
   const handleBookAppointment = () => {
     if (user) {
       navigate('/appointment')
     } else {
-      navigate('/register')
+      navigate('/login')
     }
   }
 
   return (
     <PageWrapper>
-      <div className="text-gray-800">
+      <div className="bg-[#121212] text-[#F4F4F5] min-h-screen selection:bg-[#E63946] selection:text-[#F4F4F5]">
 
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-pink-100 to-pink-200 py-24 text-center relative overflow-hidden">
-          <motion.h1
-            {...fadeInUp}
-            className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-4"
-          >
-            Welcome to <span className="text-pink-600">Éclat Beauty Lounge</span>
-          </motion.h1>
+        <section className="relative min-h-[90vh] flex flex-col justify-center px-4 md:px-12 border-b border-[#27272A] overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 bg-[#121212]/80 z-10"></div>
+            <img
+              src="https://images.unsplash.com/photo-1521590832168-60cc2ec46101?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+              alt="Salon Interior"
+              className="w-full h-full object-cover grayscale opacity-40 mix-blend-luminosity"
+            />
+          </div>
 
-          <motion.p
-            {...fadeIn}
-            transition={{ delay: 0.3 }}
-            className="text-xl md:text-2xl text-gray-700 mb-8"
-          >
-            Where Radiance Meets Elegance ✨
-          </motion.p>
-
-          <motion.div
-            {...fadeInUp}
-            transition={{ delay: 0.5 }}
-            className="flex justify-center space-x-4"
-          >
-            <button
-              className="bg-pink-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-pink-600 transition"
-              onClick={handleBookAppointment}
-            >
-              Book Appointment
-            </button>
-            <Link to="/services">
-              <button className="bg-white text-pink-600 border border-pink-500 px-6 py-3 rounded-full font-semibold hover:bg-pink-50 transition">
-                Explore Services
-              </button>
-            </Link>
-          </motion.div>
-        </section>
-
-        {/* About Section */}
-        <section className="py-20 px-6 max-w-6xl mx-auto text-center">
-          <motion.h2
-            {...fadeInUp}
-            transition={{ delay: 0.2 }}
-            className="text-3xl md:text-4xl font-bold mb-6"
-          >
-            About Us
-          </motion.h2>
-          <motion.p
-            {...fadeIn}
-            transition={{ delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto"
-          >
-            At Éclat Beauty Lounge, we redefine luxury by blending elegance with expertise. 
-            From professional hair styling to rejuvenating skin treatments and bridal makeovers, 
-            our specialists craft every service with perfection. Your glow, our passion.
-          </motion.p>
-        </section>
-
-        {/* Services Preview */}
-        <section className="py-20 bg-gray-50">
-          <motion.h2
-            {...fadeInUp}
-            transition={{ delay: 0.2 }}
-            className="text-3xl md:text-4xl font-bold text-center mb-12"
-          >
-            Our Popular Services
-          </motion.h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
-            {/* Hair Styling */}
-            <motion.div
+          <div className="relative z-10 max-w-7xl mx-auto w-full">
+            <motion.h1
               {...fadeInUp}
-              transition={{ delay: 0.3 }}
-              className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition"
+              className="text-7xl md:text-[10rem] lg:text-[12rem] font-black uppercase tracking-tighter leading-none mb-6"
             >
-              <div className="w-16 h-16 mx-auto bg-pink-100 rounded-full flex items-center justify-center mb-4">
-                💇‍♀️
-              </div>
-              <h3 className="text-xl font-bold mb-3">Hair Styling</h3>
-              <p className="text-gray-600 mb-4">Trendy cuts, coloring, and styling crafted by our professionals.</p>
-              <Link to="/services" className="text-pink-500 font-semibold hover:underline">Explore</Link>
-            </motion.div>
+              Raw <br /> <span className="text-[#E63946]">Beauty.</span>
+            </motion.h1>
 
-            {/* Skin Treatments */}
+            <motion.p
+              {...fadeIn}
+              transition={{ delay: 0.3 }}
+              className="text-xl md:text-3xl font-bold uppercase tracking-widest text-[#a1a1aa] mb-12 max-w-2xl"
+            >
+              The Modern Standard for Editorial Grooming and Styling.
+            </motion.p>
+
             <motion.div
               {...fadeInUp}
               transition={{ delay: 0.5 }}
-              className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition"
+              className="flex flex-col sm:flex-row gap-6"
             >
-              <div className="w-16 h-16 mx-auto bg-pink-100 rounded-full flex items-center justify-center mb-4">
-                🌸
-              </div>
-              <h3 className="text-xl font-bold mb-3">Skin Treatments</h3>
-              <p className="text-gray-600 mb-4">Rejuvenating facials & therapies for glowing, healthy skin.</p>
-              <Link to="/services" className="text-pink-500 font-semibold hover:underline">Explore</Link>
-            </motion.div>
-
-            {/* Bridal Makeovers */}
-            <motion.div
-              {...fadeInUp}
-              transition={{ delay: 0.7 }}
-              className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition"
-            >
-              <div className="w-16 h-16 mx-auto bg-pink-100 rounded-full flex items-center justify-center mb-4">
-                👰
-              </div>
-              <h3 className="text-xl font-bold mb-3">Bridal Makeovers</h3>
-              <p className="text-gray-600 mb-4">Look radiant on your big day with our exclusive bridal packages.</p>
-              <Link to="/services" className="text-pink-500 font-semibold hover:underline">Explore</Link>
+              <button
+                className="brutalist-pill bg-[#F4F4F5] text-[#121212] px-12 py-5 font-black text-xl md:text-2xl uppercase tracking-widest hover:bg-[#E63946] hover:text-[#F4F4F5] hover:border-[#E63946] transition-colors"
+                onClick={handleBookAppointment}
+              >
+                Secure Slot
+              </button>
+              <Link to="/services">
+                <button className="brutalist-pill bg-transparent text-[#F4F4F5] px-12 py-5 font-black text-xl md:text-2xl uppercase tracking-widest hover:bg-[#F4F4F5] hover:text-[#121212] transition-colors w-full sm:w-auto text-center">
+                  The Menu
+                </button>
+              </Link>
             </motion.div>
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="py-20 px-6 bg-white">
+        {/* Marquee or Manifest text */}
+        <section className="py-8 brutalist-border-b bg-[#E63946] text-[#F4F4F5] overflow-hidden whitespace-nowrap flex items-center">
+          <motion.div
+            animate={{ x: [0, -1000] }}
+            transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+            className="text-3xl md:text-5xl font-black uppercase tracking-widest flex gap-8"
+          >
+            <span>NO COMPROMISE.</span> <span>PURE AESTHETICS.</span> <span>MODERN BRUTALISM.</span> <span>ELEVATED EXPERIENCE.</span>
+            <span>NO COMPROMISE.</span> <span>PURE AESTHETICS.</span> <span>MODERN BRUTALISM.</span> <span>ELEVATED EXPERIENCE.</span>
+          </motion.div>
+        </section>
+
+        {/* About / Philosophy Section */}
+        <section className="py-24 px-4 md:px-12 max-w-7xl mx-auto border-b border-[#27272A]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div>
+              <motion.h2
+                {...fadeInUp}
+                className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-8"
+              >
+                <span className="text-[#E63946]">01.</span> <br /> The Ethos
+              </motion.h2>
+            </div>
+            <div>
+              <motion.p
+                {...fadeIn}
+                transition={{ delay: 0.2 }}
+                className="text-2xl md:text-4xl font-bold text-[#a1a1aa] leading-tight uppercase tracking-tight"
+              >
+                We strip away the excess. <br />
+                <span className="text-[#F4F4F5]">What remains is pure technique, premium structure, and uncompromising quality.</span> Your image, distilled.
+              </motion.p>
+            </div>
+          </div>
+        </section>
+
+        {/* Services Preview Grid */}
+        <section className="py-24 px-4 md:px-12 max-w-7xl mx-auto border-b border-[#27272A]">
           <motion.h2
             {...fadeInUp}
-            className="text-3xl md:text-4xl font-bold text-center mb-12"
+            className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-16"
           >
-            What Our Clients Say 💕
+            <span className="text-[#a1a1aa]">02.</span> <br /> Disciplines
           </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="bg-gray-50 rounded-xl p-6 shadow">
-              <p className="text-gray-600 italic">“Best salon experience ever! My hair looks amazing and the staff is so friendly.”</p>
-              <h4 className="mt-4 font-bold text-pink-500">– Priya S.</h4>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Structural Cuts */}
+            <motion.div
+              {...fadeInUp}
+              transition={{ delay: 0.2 }}
+              className="bg-[#1C1C1C] brutalist-border p-10 flex flex-col group hover:bg-[#F4F4F5] transition-colors duration-500 hover:text-[#121212]"
+            >
+              <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-6">Structural <br /> Cuts</h3>
+              <p className="text-[#a1a1aa] font-bold uppercase tracking-widest mb-12 flex-1 group-hover:text-[#27272A]">Precision shaping and brutal efficiency. The architecture of modern hair.</p>
+              <Link to="/services" className="font-black uppercase tracking-widest flex items-center gap-4 text-[#E63946]">
+                Explore <span>→</span>
+              </Link>
             </motion.div>
-            <motion.div {...fadeInUp} transition={{ delay: 0.4 }} className="bg-gray-50 rounded-xl p-6 shadow">
-              <p className="text-gray-600 italic">“The facial was heavenly, my skin feels brand new. Highly recommend Éclat!”</p>
-              <h4 className="mt-4 font-bold text-pink-500">– Ananya D.</h4>
+
+            {/* Technical Color */}
+            <motion.div
+              {...fadeInUp}
+              transition={{ delay: 0.4 }}
+              className="bg-[#1C1C1C] brutalist-border p-10 flex flex-col group hover:bg-[#F4F4F5] transition-colors duration-500 hover:text-[#121212]"
+            >
+              <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-6">Technical <br /> Color</h3>
+              <p className="text-[#a1a1aa] font-bold uppercase tracking-widest mb-12 flex-1 group-hover:text-[#27272A]">High-contrast bleaches, deep saturated tones, and chemical mastery.</p>
+              <Link to="/services" className="font-black uppercase tracking-widest flex items-center gap-4 text-[#E63946]">
+                Explore <span>→</span>
+              </Link>
             </motion.div>
-            <motion.div {...fadeInUp} transition={{ delay: 0.6 }} className="bg-gray-50 rounded-xl p-6 shadow">
-              <p className="text-gray-600 italic">“They made my wedding day extra special with a flawless bridal makeover.”</p>
-              <h4 className="mt-4 font-bold text-pink-500">– Riya M.</h4>
+
+            {/* Editorial Styling */}
+            <motion.div
+              {...fadeInUp}
+              transition={{ delay: 0.6 }}
+              className="bg-[#1C1C1C] brutalist-border p-10 flex flex-col group hover:bg-[#E63946] transition-colors duration-500 hover:border-[#E63946]"
+            >
+              <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-6 group-hover:text-[#121212]">Editorial <br /> Styling</h3>
+              <p className="text-[#a1a1aa] font-bold uppercase tracking-widest mb-12 flex-1 group-hover:text-[#121212]">Camera-ready finishing. Sculpting aesthetic perfection for impact.</p>
+              <Link to="/services" className="font-black uppercase tracking-widest flex items-center gap-4 text-[#F4F4F5] group-hover:text-[#121212]">
+                Explore <span>→</span>
+              </Link>
             </motion.div>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-20 bg-gradient-to-r from-pink-500 to-pink-600 text-center text-white">
-          <motion.h2 {...fadeInUp} className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Glow with Éclat?
+        {/* CTA Section */}
+        <section className="py-32 px-4 md:px-12 bg-[#F4F4F5] text-[#121212] text-center brutalist-border-b border-[#27272A]">
+          <motion.h2 {...fadeInUp} className="text-6xl md:text-8xl lg:text-[10rem] font-black uppercase tracking-tighter leading-none mb-12">
+            Initiate.
           </motion.h2>
           <button
-            className="bg-white text-pink-600 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition"
+            className="brutalist-pill bg-[#121212] text-[#F4F4F5] border-[#121212] px-16 py-6 font-black text-2xl md:text-4xl uppercase tracking-widest hover:bg-[#E63946] hover:border-[#E63946] transition-colors"
             onClick={handleBookAppointment}
           >
-            Book Your Appointment Today
+            Deploy Booking
           </button>
         </section>
 
-        {/* Footer with Quick Links */}
-        <footer className="bg-gray-900 text-gray-300 py-10 mt-0">
-          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-            {/* Brand */}
-            <div>
-              <h3 className="text-xl font-bold text-white mb-3">Éclat Beauty Lounge</h3>
-              <p className="text-gray-400 text-sm">
-                Enhancing your beauty with elegance and expertise. ✨
-              </p>
+        {/* Footer */}
+        <footer className="bg-[#121212] text-[#F4F4F5] pt-24 pb-12 px-4 md:px-12 border-t border-[#27272A]">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
+
+            <div className="md:col-span-6">
+              <h3 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-6">
+                Salon <br /><span className="text-[#E63946]">Desk</span>.
+              </h3>
             </div>
 
-            {/* Quick Links */}
-            <div>
-              <h4 className="font-semibold text-white mb-3">Quick Links</h4>
-              <ul className="space-y-2">
-                <li><Link to="/" className="hover:text-pink-400 transition">Home</Link></li>
-                <li><Link to="/services" className="hover:text-pink-400 transition">Services</Link></li>
-                <li><Link to="/appointment" className="hover:text-pink-400 transition">Book Appointment</Link></li>
-                <li><Link to="/dashboard" className="hover:text-pink-400 transition">Client Dashboard</Link></li>
+            <div className="md:col-span-3">
+              <h4 className="font-black uppercase tracking-widest text-[#a1a1aa] mb-6 text-sm">Navigation</h4>
+              <ul className="space-y-4 font-bold uppercase tracking-widest">
+                <li><Link to="/" className="hover:text-[#E63946] transition-colors">Home</Link></li>
+                <li><Link to="/services" className="hover:text-[#E63946] transition-colors">The Menu</Link></li>
+                <li><Link to="/appointment" className="hover:text-[#E63946] transition-colors">Secure Slot</Link></li>
+                <li><Link to="/dashboard" className="hover:text-[#E63946] transition-colors">Portal</Link></li>
               </ul>
             </div>
 
-            {/* Contact Info */}
-            <div>
-              <h4 className="font-semibold text-white mb-3">Contact</h4>
-              <p className="text-gray-400 text-sm">📍 123 Elegance Street, Gandhinagar</p>
-              <p className="text-gray-400 text-sm">📞 +91 12345 67890</p>
-              <p className="text-gray-400 text-sm">✉️ support@eclatbeauty.com</p>
+            <div className="md:col-span-3">
+              <h4 className="font-black uppercase tracking-widest text-[#a1a1aa] mb-6 text-sm">Coordinates</h4>
+              <ul className="space-y-4 font-bold uppercase tracking-widest text-[#F4F4F5]">
+                <li>Sector 4, Core Grid</li>
+                <li>+91 (0) 999 888 7777</li>
+                <li className="text-[#E63946]">TRANSMIT@SALONDESK.NET</li>
+              </ul>
             </div>
+
           </div>
 
-          <div className="text-center text-gray-500 text-sm mt-8 border-t border-gray-700 pt-6">
-            © 2025 Éclat Beauty Lounge. All rights reserved.
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-[#a1a1aa] font-bold uppercase tracking-widest text-xs border-t border-[#27272A] pt-8">
+            <p>SYSTEM ONLINE. © 2026 SALON DESK.</p>
+            <p>BRUTALIST ARCHITECTURE.</p>
           </div>
         </footer>
       </div>

@@ -130,7 +130,7 @@ function AppointmentPage() {
     try {
       const res = await axios.get('/appointments', {
         params: {
-          client: user.id,
+          client: user?.id,
           branch: formData.branch,
           service: formData.service,
           date: formData.date,
@@ -138,7 +138,7 @@ function AppointmentPage() {
         }
       });
       if (res.data.length > 0) {
-        toast.error("You already have an appointment for this service at this time.");
+        toast.error("YOU ALREADY HAVE AN APPOINTMENT FOR THIS SLOT.");
         return;
       }
     } catch (err) {
@@ -159,53 +159,60 @@ function AppointmentPage() {
     }
     try {
       await axios.post("/appointments", payload);
-      toast.success("Appointment booked successfully!");
+      toast.success("APPOINTMENT CONFIRMED.");
       setTimeout(() => {
-        navigate("/client/dashboard");
+        navigate("/dashboard");
       }, 1000);
     } catch (err) {
-      toast.error("Failed to book appointment");
+      toast.error("FAILED TO BOOK APPOINTMENT");
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="w-12 h-12 border-4 border-pink-300 border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex justify-center items-center h-[80vh] text-[#F4F4F5] font-black text-2xl tracking-widest uppercase">
+        Loading Assets...
       </div>
     );
   }
 
   return (
-    <div className="bg-pink-50 min-h-screen py-12 px-4 flex items-center justify-center">
+    <div className="bg-[#121212] min-h-screen py-12 px-4 md:px-8 text-[#F4F4F5] flex flex-col items-center">
+
+      {/* Editorial Header Image (Placeholder) */}
+      <div className="w-full max-w-5xl h-64 md:h-96 brutalist-border mb-12 bg-[#1C1C1C] relative overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 bg-cover bg-center grayscale contrast-125 opacity-30" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1521590832168-60cc2ec46101?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')" }}></div>
+        <h1 className="relative z-10 text-6xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter mix-blend-difference">
+          Secure <br /> <span className="text-[#E63946]">Slot.</span>
+        </h1>
+      </div>
+
       <motion.div
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-white shadow-2xl rounded-3xl p-8 md:p-10 w-full max-w-lg border border-pink-100"
+        className="w-full max-w-5xl"
       >
-        <h1 className="text-3xl md:text-4xl font-extrabold text-pink-600 text-center mb-6">
-          Book Appointment
-        </h1>
-        <p className="text-gray-600 text-center mb-8 text-sm md:text-base">
-          Fill out the form below and our team will confirm your slot.
-        </p>
+        <form onSubmit={handleSubmit} className="brutalist-border bg-[#1C1C1C] p-8 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-12 gap-y-16">
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="col-span-full">
+            <p className="text-[#a1a1aa] uppercase tracking-widest text-lg font-bold">Step 1 — Location & Service</p>
+          </div>
+
           {/* Branch */}
           <div>
-            <label className="block text-sm font-semibold mb-2">Select Branch</label>
+            <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Select Branch</label>
             <select
               name="branch"
               required
               value={formData.branch}
               onChange={handleBranchChange}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
+              className="w-full p-4 bg-transparent brutalist-border-b border-[#27272A] focus:border-[#E63946] text-[#F4F4F5] font-bold uppercase tracking-widest outline-none appearance-none rounded-none"
             >
-              <option value="">-- Choose a Branch --</option>
+              <option value="" className="bg-[#121212]">-- CHOOSE A BRANCH --</option>
               {branches.map((branch) => (
-                <option key={branch._id} value={branch._id}>
-                  {branch.name} - {branch.address}
+                <option key={branch._id} value={branch._id} className="bg-[#121212]">
+                  {branch.name} — {branch.address}
                 </option>
               ))}
             </select>
@@ -213,38 +220,42 @@ function AppointmentPage() {
 
           {/* Service */}
           <div>
-            <label className="block text-sm font-semibold mb-2">Select Service</label>
+            <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Select Service</label>
             <select
               name="service"
               required
               value={formData.service}
               onChange={handleServiceChange}
               disabled={!formData.branch}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
+              className="w-full p-4 bg-transparent brutalist-border-b border-[#27272A] focus:border-[#E63946] text-[#F4F4F5] font-bold uppercase tracking-widest outline-none disabled:opacity-50 appearance-none rounded-none"
             >
-              <option value="">-- Choose a Service --</option>
+              <option value="" className="bg-[#121212]">-- CHOOSE A SERVICE --</option>
               {services.map((s) => (
-                <option key={s._id} value={s._id}>
-                  {s.name} (₹{s.price}, {s.duration} mins)
+                <option key={s._id} value={s._id} className="bg-[#121212]">
+                  {s.name} (₹{s.price})
                 </option>
               ))}
             </select>
           </div>
 
+          <div className="col-span-full brutalist-border-t border-[#27272A] pt-12 mt-4">
+            <p className="text-[#a1a1aa] uppercase tracking-widest text-lg font-bold">Step 2 — Professional & Schedule</p>
+          </div>
+
           {/* Stylist */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Preferred Stylist</label>
+          <div className="col-span-full">
+            <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Preferred Stylist</label>
             <select
               name="stylist"
               required
               value={formData.stylist}
               onChange={handleChange}
               disabled={!formData.service}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
+              className="w-full max-w-md p-4 bg-transparent brutalist-border-b border-[#27272A] focus:border-[#E63946] text-[#F4F4F5] font-bold uppercase tracking-widest outline-none disabled:opacity-50 appearance-none rounded-none"
             >
-              <option value="">-- Choose a Stylist --</option>
+              <option value="" className="bg-[#121212]">-- CHOOSE A STYLIST --</option>
               {stylists.map((stylist) => (
-                <option key={stylist._id} value={stylist._id}>
+                <option key={stylist._id} value={stylist._id} className="bg-[#121212]">
                   {stylist.name} ({stylist.gender})
                 </option>
               ))}
@@ -253,23 +264,23 @@ function AppointmentPage() {
 
           {/* Name (for guests) */}
           {!user && (
-            <div>
-              <label className="block text-sm font-semibold mb-2">Your Name</label>
+            <div className="col-span-full">
+              <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Your Name (Guest)</label>
               <input
                 type="text"
                 name="name"
                 required
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Enter your name"
-                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none"
+                placeholder="ENTER YOUR NAME"
+                className="w-full max-w-md p-4 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest outline-none focus:border-[#E63946] placeholder-[#27272A]"
               />
             </div>
           )}
 
           {/* Date */}
           <div>
-            <label className="block text-sm font-semibold mb-2">Select Date</label>
+            <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Select Date</label>
             <input
               type="date"
               name="date"
@@ -277,24 +288,23 @@ function AppointmentPage() {
               value={formData.date}
               onChange={handleChange}
               min={new Date().toISOString().split("T")[0]}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-300 outline-none bg-white"
-              style={{ fontSize: "1rem" }}
+              className="w-full p-4 bg-transparent brutalist-border border-[#27272A] focus:border-[#E63946] text-[#F4F4F5] font-bold uppercase tracking-widest outline-none block"
             />
           </div>
 
           {/* Time Slot */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Time Slot</label>
-            <div className="grid grid-cols-3 gap-3">
+          <div className="col-span-full">
+            <label className="block text-2xl font-black mb-6 uppercase tracking-tight">Time Slot</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {availableTimes.map((slot) => (
                 <button
                   type="button"
                   key={slot}
                   onClick={() => setFormData({ ...formData, time: slot })}
-                  className={`py-2 rounded-lg border transition 
+                  className={`py-4 font-mono text-xl font-bold uppercase tracking-widest transition-colors brutalist-pill
                     ${formData.time === slot
-                      ? "bg-pink-500 text-white border-pink-500"
-                      : "bg-white text-pink-700 border-pink-200 hover:bg-pink-100"}`}
+                      ? "bg-[#E63946] text-[#F4F4F5] border-[#E63946]"
+                      : "bg-[#121212] text-[#a1a1aa] border-[#27272A] hover:bg-[#F4F4F5] hover:text-[#121212]"}`}
                 >
                   {slot}
                 </button>
@@ -303,21 +313,23 @@ function AppointmentPage() {
             {/* Hidden input to keep formData.time in sync for form submission */}
             <input type="hidden" name="time" value={formData.time} />
             {formData.time && (
-              <div className="mt-2 text-pink-600 text-sm">
-                Selected: <span className="font-bold">{formData.time}</span>
+              <div className="mt-8 text-[#E63946] font-bold uppercase tracking-widest text-lg">
+                Selected Slot: <span className="font-black text-2xl">{formData.time}</span>
               </div>
             )}
           </div>
 
           {/* Submit */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            className="w-full bg-pink-500 text-white font-semibold py-3 rounded-xl hover:bg-pink-600 transition"
-          >
-            Confirm Appointment
-          </motion.button>
+          <div className="col-span-full mt-12">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              className="w-full brutalist-pill bg-[#F4F4F5] text-[#121212] font-black text-4xl md:text-5xl py-8 hover:bg-[#E63946] hover:text-[#F4F4F5] hover:border-[#E63946] transition-colors"
+            >
+              CONFIRM BOOKING
+            </motion.button>
+          </div>
         </form>
       </motion.div>
     </div>

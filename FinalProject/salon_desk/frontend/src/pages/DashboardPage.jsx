@@ -57,18 +57,12 @@ function DashboardPage() {
 
   const handleProfileUpdate = async () => {
     try {
-      console.log('Updating profile with:', editForm)
       const res = await axios.put(`/users/${user.id || user._id}`, editForm)
-      console.log('Profile update response:', res.data)
       if (res.data.success) {
         toast.success("Profile updated")
         setShowEditModal(false)
-        // Update user context with new data
-        const updatedUser = { ...user, ...editForm }
-        console.log('Updated user data:', updatedUser)
       }
     } catch (err) {
-      console.error('Profile update error:', err)
       toast.error("Failed to update profile")
     }
   }
@@ -76,8 +70,8 @@ function DashboardPage() {
   if (userLoading || loading) {
     return (
       <PageWrapper>
-        <div className="text-center py-24 font-semibold text-gray-600">
-          Loading dashboard...
+        <div className="flex h-[80vh] items-center justify-center font-bold text-2xl uppercase tracking-widest text-[#F4F4F5]">
+          Loading...
         </div>
       </PageWrapper>
     )
@@ -86,8 +80,8 @@ function DashboardPage() {
   if (!user) {
     return (
       <PageWrapper>
-        <div className="text-center py-24 font-semibold text-gray-600">
-          Please log in to view your dashboard.
+        <div className="flex h-[80vh] items-center justify-center font-bold text-2xl uppercase tracking-widest text-[#F4F4F5]">
+          ACCESS DENIED. PLEASE LOGIN.
         </div>
       </PageWrapper>
     )
@@ -106,177 +100,199 @@ function DashboardPage() {
 
   return (
     <PageWrapper>
-      <div className="py-10 md:py-16 px-4 md:px-8 max-w-7xl mx-auto">
+      <div className="py-10 md:py-20 px-4 md:px-8 max-w-7xl mx-auto text-[#F4F4F5]">
         {/* Heading */}
-        <motion.h1 {...fadeInUp} className="text-3xl md:text-4xl font-bold text-center mb-10">
-          Client Dashboard
+        <motion.h1 {...fadeInUp} className="text-6xl md:text-8xl lg:text-9xl font-black mb-16 tracking-tighter uppercase leading-none">
+          Client <br />
+          <span className="text-[#E63946]">Dashboard</span>
         </motion.h1>
 
-        {/* Profile */}
-        <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="bg-white shadow-lg rounded-xl p-6 md:p-8 mb-10 text-center relative">
-          <div className="w-24 h-24 mx-auto bg-pink-100 rounded-full mb-4 overflow-hidden">
-            {user.profilePhoto ? (
-              <img 
-                src={user.profilePhoto} 
-                alt="Profile" 
-                className="w-full h-full object-cover"
-                onLoad={() => console.log('Image loaded successfully:', user.profilePhoto)}
-                onError={(e) => {
-                  console.log('Image failed to load:', e.target.src)
-                  console.log('Current user profilePhoto:', user.profilePhoto)
-                  e.target.style.display = 'none'
-                  e.target.nextSibling.style.display = 'flex'
-                }}
-              />
-            ) : null}
-            <div 
-              className={`w-full h-full flex items-center justify-center text-2xl font-bold text-pink-600 ${user.profilePhoto ? 'hidden' : 'flex'}`}
-            >
-              {user.name?.charAt(0)?.toUpperCase()}
+        {/* Profile Grid */}
+        <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="brutalist-border bg-[#1C1C1C] p-8 md:p-12 mb-16 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+          <div className="md:col-span-1">
+            <div className="w-32 h-32 md:w-48 md:h-48 bg-[#121212] brutalist-border overflow-hidden relative">
+              {user.profilePhoto ? (
+                <img 
+                  src={user.profilePhoto} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover grayscale contrast-125"
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                    e.target.nextSibling.style.display = 'flex'
+                  }}
+                />
+              ) : null}
+              <div className={`w-full h-full flex items-center justify-center text-6xl font-black text-[#E63946] ${user.profilePhoto ? 'hidden' : 'flex'}`}>
+                {user.name?.charAt(0)?.toUpperCase()}
+              </div>
             </div>
           </div>
-          <h2 className="text-2xl font-bold mb-2">{user.name}</h2>
-          <p className="text-gray-600">{user.email}</p>
-          <p className="text-gray-600">{user.phone}</p>
-          <button
-            onClick={() => setShowEditModal(true)}
-            className="absolute top-4 right-4 bg-pink-500 text-white px-3 py-1 rounded-full text-sm hover:bg-pink-600"
-          >
-            Edit Profile
-          </button>
+          
+          <div className="md:col-span-2 space-y-4">
+            <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-tight">{user.name}</h2>
+            <div className="flex flex-col space-y-2 text-[#a1a1aa] uppercase tracking-widest text-sm font-medium">
+              <span>{user.email}</span>
+              <span>{user.phone || "NO PHONE ADDED"}</span>
+            </div>
+            <div className="pt-6">
+              <button
+                onClick={() => setShowEditModal(true)}
+                className="brutalist-pill px-8 py-3 bg-[#E63946] text-[#F4F4F5] font-bold hover:bg-[#121212] hover:text-[#E63946] hover:border-[#E63946] transition-colors"
+              >
+                Edit Profile
+              </button>
+            </div>
+          </div>
         </motion.div>
 
         {/* Analytics Section */}
-        <motion.div {...fadeInUp} transition={{ delay: 0.3 }} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <motion.div {...fadeInUp} transition={{ delay: 0.3 }} className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
           {/* Expenses */}
-          <div className="bg-white p-5 rounded-xl shadow">
-            <h3 className="font-bold text-lg mb-4">Total Expenses</h3>
-            <ResponsiveContainer width="100%" height={250}>
+          <div className="brutalist-border bg-[#1C1C1C] p-6 md:p-10">
+            <h3 className="text-4xl md:text-5xl font-black mb-8 uppercase tracking-tight">Total Expenses</h3>
+            <ResponsiveContainer width="100%" height={300}>
               <BarChart data={expenseData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="service" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="cost" fill="#ec4899" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272A" />
+                <XAxis dataKey="service" stroke="#F4F4F5" tick={{fill: '#F4F4F5', fontSize: 12, fontFamily: 'Space Grotesk'}} />
+                <YAxis stroke="#F4F4F5" tick={{fill: '#F4F4F5', fontFamily: 'Space Grotesk'}} />
+                <Tooltip cursor={{fill: '#27272A'}} contentStyle={{backgroundColor: '#121212', border: '1px solid #27272A', fontFamily: 'Space Grotesk'}} />
+                <Bar dataKey="cost" fill="#E63946" />
               </BarChart>
             </ResponsiveContainer>
           </div>
           {/* Appointments */}
-          <div className="bg-white p-5 rounded-xl shadow">
-            <h3 className="font-bold text-lg mb-4">Appointments Over Time</h3>
-            <ResponsiveContainer width="100%" height={250}>
+          <div className="brutalist-border bg-[#1C1C1C] p-6 md:p-10">
+            <h3 className="text-4xl md:text-5xl font-black mb-8 uppercase tracking-tight">Activity</h3>
+            <ResponsiveContainer width="100%" height={300}>
               <LineChart data={appointmentData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="count" stroke="#ec4899" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272A" />
+                <XAxis dataKey="date" stroke="#F4F4F5" tick={{fill: '#F4F4F5', fontSize: 12, fontFamily: 'Space Grotesk'}} />
+                <YAxis stroke="#F4F4F5" tick={{fill: '#F4F4F5', fontFamily: 'Space Grotesk'}} />
+                <Tooltip contentStyle={{backgroundColor: '#121212', border: '1px solid #27272A', fontFamily: 'Space Grotesk'}} />
+                <Line type="monotone" dataKey="count" stroke="#E63946" strokeWidth={4} dot={{r: 6, fill: '#E63946', strokeWidth: 2, stroke: '#1C1C1C'}} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </motion.div>
 
         {/* Upcoming Appointments */}
-        <motion.h2 {...fadeInUp} transition={{ delay: 0.3 }} className="text-2xl font-bold text-pink-500 mb-6">
-          Upcoming Appointments
+        <motion.h2 {...fadeInUp} transition={{ delay: 0.3 }} className="text-5xl md:text-7xl font-black text-[#E63946] mb-8 uppercase brutalist-border-b pb-4">
+          Upcoming
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
           {upcoming.length > 0 ? (
             upcoming.map((appt, index) => (
               <motion.div
                 key={appt._id}
                 {...fadeInUp}
-                transition={{ delay: 0.4 + index * 0.2 }}
-                className="bg-white p-5 rounded-xl shadow text-center"
+                transition={{ delay: 0.4 + index * 0.1 }}
+                className="brutalist-border bg-[#1C1C1C] p-8 flex flex-col justify-between"
               >
-                <h3 className="text-lg font-bold mb-1">{appt.service?.name}</h3>
-                <p className="text-gray-600">with {appt.stylist?.name}</p>
-                <div className="text-gray-500 mt-2">
-                  {new Date(appt.date).toLocaleDateString()} | {appt.time}
+                <div>
+                  <h3 className="text-3xl font-black mb-2 uppercase tracking-tight">{appt.service?.name}</h3>
+                  <p className="text-[#a1a1aa] uppercase text-sm tracking-widest mb-6">W/ {appt.stylist?.name}</p>
+                  <div className="font-mono text-lg mb-8 uppercase bg-[#121212] p-4 brutalist-border pb-3">
+                    {new Date(appt.date).toLocaleDateString()} <br/> {appt.time}
+                  </div>
                 </div>
                 <button
                   onClick={() => cancelAppointment(appt._id)}
-                  className="mt-3 bg-pink-500 text-white px-4 py-1 rounded-full text-sm hover:bg-pink-600 transition"
+                  className="brutalist-pill w-full py-4 bg-transparent text-[#F4F4F5] hover:bg-[#E63946] hover:border-[#E63946] transition-colors font-bold"
                 >
-                  Cancel
+                  Cancel Appt
                 </button>
               </motion.div>
             ))
           ) : (
-            <p className="text-gray-500">No upcoming appointments</p>
+            <div className="col-span-full brutalist-border p-16 text-center text-[#a1a1aa] font-bold text-xl md:text-2xl uppercase tracking-widest">
+              No upcoming appointments. <br />
+              <span className="text-[#F4F4F5]">Schedule one today.</span>
+            </div>
           )}
         </div>
 
         {/* Appointment History */}
-        <motion.h2 {...fadeInUp} transition={{ delay: 0.6 }} className="text-2xl font-bold text-pink-500 mb-6">
-          Appointment History
+        <motion.h2 {...fadeInUp} transition={{ delay: 0.6 }} className="text-5xl md:text-7xl font-black mb-8 uppercase brutalist-border-b pb-4 text-[#F4F4F5]">
+          History
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
           {history.length > 0 ? (
             history.map((appt, index) => (
               <motion.div
                 key={appt._id}
                 {...fadeInUp}
-                transition={{ delay: 0.7 + index * 0.2 }}
-                className="bg-white p-5 rounded-xl shadow text-center"
+                transition={{ delay: 0.7 + index * 0.1 }}
+                className="brutalist-border p-8 flex flex-col justify-between opacity-70 hover:opacity-100 transition-opacity"
               >
-                <h3 className="text-lg font-bold mb-1">{appt.service?.name}</h3>
-                <p className="text-gray-600">with {appt.stylist?.name}</p>
-                <div className="text-gray-500 mt-2">{new Date(appt.date).toLocaleDateString()}</div>
-                <div className={`mt-2 font-semibold ${appt.status === "completed" ? "text-green-600" : "text-gray-600"}`}>
+                <div>
+                  <h3 className="text-3xl font-black mb-2 uppercase text-[#a1a1aa] tracking-tight">{appt.service?.name}</h3>
+                  <p className="text-[#a1a1aa] uppercase text-sm tracking-widest mb-6">W/ {appt.stylist?.name}</p>
+                  <div className="font-mono text-lg mb-8 text-[#F4F4F5]">
+                    {new Date(appt.date).toLocaleDateString()}
+                  </div>
+                </div>
+                <div className={`brutalist-pill text-center py-3 font-bold text-sm ${appt.status === "completed" ? "bg-[#27272A] text-[#F4F4F5] border-[#27272A]" : "border-[#E63946] text-[#E63946]"}`}>
                   {appt.status}
                 </div>
               </motion.div>
             ))
           ) : (
-            <p className="text-gray-500">No past appointments</p>
+            <div className="col-span-full brutalist-border p-16 text-center text-[#a1a1aa] font-bold text-xl uppercase tracking-widest">
+              No past appointments found.
+            </div>
           )}
         </div>
       </div>
 
       {/* Profile Edit Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
-            <input
-              type="text"
-              value={editForm.name}
-              onChange={e => setEditForm({ ...editForm, name: e.target.value })}
-              placeholder="Name"
-              className="w-full mb-3 p-2 border rounded"
-            />
-            <input
-              type="email"
-              value={editForm.email}
-              onChange={e => setEditForm({ ...editForm, email: e.target.value })}
-              placeholder="Email"
-              className="w-full mb-3 p-2 border rounded"
-            />
-            <input
-              type="password"
-              value={editForm.password}
-              onChange={e => setEditForm({ ...editForm, password: e.target.value })}
-              placeholder="New Password"
-              className="w-full mb-3 p-2 border rounded"
-            />
-            <input
-              type="text"
-              value={editForm.phone || ""}
-              onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
-              placeholder="Phone Number"
-              className="w-full mb-3 p-2 border rounded"
-            />
-            <div className="flex justify-end space-x-3">
-              <button onClick={() => setShowEditModal(false)} className="px-4 py-2 bg-gray-300 rounded">
-                Cancel
+        <div className="fixed inset-0 bg-[#121212]/95 flex items-center justify-center z-50 p-4 backdrop-blur-md">
+          <div className="brutalist-border bg-[#1C1C1C] p-8 md:p-12 w-full max-w-xl">
+            <h2 className="text-5xl md:text-6xl font-black mb-10 uppercase tracking-tighter">Edit <span className="text-[#E63946]">Profile</span></h2>
+            <div className="space-y-6">
+              <input
+                type="text"
+                value={editForm.name}
+                onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                placeholder="NAME"
+                className="w-full p-5 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest focus:outline-none focus:border-[#E63946] transition-colors placeholder-[#a1a1aa]"
+              />
+              <input
+                type="email"
+                value={editForm.email}
+                onChange={e => setEditForm({ ...editForm, email: e.target.value })}
+                placeholder="EMAIL"
+                className="w-full p-5 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest focus:outline-none focus:border-[#E63946] transition-colors placeholder-[#a1a1aa]"
+              />
+              <input
+                type="password"
+                value={editForm.password}
+                onChange={e => setEditForm({ ...editForm, password: e.target.value })}
+                placeholder="NEW PASSWORD (OPTIONAL)"
+                className="w-full p-5 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest focus:outline-none focus:border-[#E63946] transition-colors placeholder-[#a1a1aa]"
+              />
+              <input
+                type="text"
+                value={editForm.phone || ""}
+                onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
+                placeholder="PHONE NUMBER"
+                className="w-full p-5 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest focus:outline-none focus:border-[#E63946] transition-colors placeholder-[#a1a1aa]"
+              />
+            </div>
+            <div className="flex flex-col sm:flex-row justify-end mt-12 space-y-4 sm:space-y-0 sm:space-x-4">
+              <button 
+                onClick={() => setShowEditModal(false)} 
+                className="brutalist-pill w-full sm:w-auto px-10 py-4 bg-transparent text-[#F4F4F5] font-bold hover:bg-[#27272A] hover:border-[#27272A] transition-colors"
+              >
+                CANCEL
               </button>
-              <button onClick={handleProfileUpdate} className="px-4 py-2 bg-pink-500 text-white rounded">
-                Save
+              <button 
+                onClick={handleProfileUpdate} 
+                className="brutalist-pill w-full sm:w-auto px-10 py-4 bg-[#E63946] border-[#E63946] text-[#F4F4F5] font-bold hover:bg-transparent hover:text-[#E63946] transition-colors"
+              >
+                SAVE CHANGES
               </button>
             </div>
           </div>
