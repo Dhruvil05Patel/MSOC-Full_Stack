@@ -1,4 +1,3 @@
-// src/pages/ServicePage.jsx
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import PageWrapper from '../components/pageWrapper'
@@ -45,7 +44,7 @@ function ServicePage() {
     return matchesFilter && matchesSearch
   })
 
-  // Simulated images for services based on generic keywords since we couldn't generate them
+  // Simulated images for services based on generic keywords
   const getServiceImage = (name, category) => {
     const query = name.toLowerCase().includes('color') ? 'hair color'
       : name.toLowerCase().includes('cut') ? 'haircut styling'
@@ -57,8 +56,8 @@ function ServicePage() {
   if (loading) {
     return (
       <PageWrapper>
-        <div className="flex justify-center items-center h-[80vh] bg-[#121212] text-[#F4F4F5]">
-          <div className="text-2xl font-black uppercase tracking-widest animate-pulse">Loading Services...</div>
+        <div className="flex justify-center items-center h-[80vh] bg-[#FAF9F6] text-[#1A1A1A]">
+          <div className="text-xl font-sans font-light tracking-widest uppercase animate-pulse">Curating Services...</div>
         </div>
       </PageWrapper>
     )
@@ -66,15 +65,15 @@ function ServicePage() {
 
   return (
     <PageWrapper>
-      <div className="bg-[#121212] min-h-screen py-16 md:py-24 px-4 md:px-8 text-[#F4F4F5]">
+      <div className="bg-[#FAF9F6] min-h-screen py-16 md:py-24 px-6 md:px-16 text-[#1A1A1A]">
 
         {/* Header Section */}
-        <div className="max-w-7xl mx-auto mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="max-w-6xl mx-auto mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-12">
           <motion.h1
             {...fadeInUp}
-            className="text-6xl md:text-8xl lg:text-[10rem] font-black uppercase tracking-tighter leading-none"
+            className="text-5xl md:text-7xl lg:text-8xl font-serif text-[#1A1A1A] leading-tight"
           >
-            The <br /> <span className="text-[#E63946]">Menu.</span>
+            Curated <br /> <span className="italic text-[#DDA7A5]">Menu</span>
           </motion.h1>
 
           {/* Search Field */}
@@ -85,10 +84,10 @@ function ServicePage() {
           >
             <input
               type="text"
-              placeholder="SEARCH SERVICES..."
+              placeholder="Search treatments..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-transparent brutalist-border-b border-[#27272A] focus:border-[#E63946] py-4 text-[#F4F4F5] font-bold uppercase tracking-widest outline-none placeholder-[#27272A] transition-colors"
+              className="elegant-input text-sm tracking-wide"
             />
           </motion.div>
         </div>
@@ -97,85 +96,83 @@ function ServicePage() {
         <motion.div
           {...fadeInUp}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="max-w-7xl mx-auto flex flex-wrap gap-4 mb-20"
+          className="max-w-6xl mx-auto flex flex-wrap gap-8 mb-20 border-b elegant-border-b pb-6"
         >
           <button
             onClick={() => setFilter('all')}
-            className={`brutalist-pill px-8 py-3 font-bold uppercase tracking-widest transition-colors ${filter === 'all'
-                ? 'bg-[#E63946] text-[#F4F4F5] border-[#E63946]'
-                : 'bg-transparent text-[#a1a1aa] hover:border-[#F4F4F5] hover:text-[#F4F4F5]'
+            className={`font-sans text-xs uppercase tracking-widest transition-colors ${filter === 'all'
+              ? 'text-[#1A1A1A] border-b border-[#1A1A1A] pb-1 font-medium'
+              : 'text-[#1A1A1A]/40 hover:text-[#1A1A1A]'
               }`}
           >
-            All [{services.length}]
-          </button>
-          <button
-            onClick={() => setFilter('male')}
-            className={`brutalist-pill px-8 py-3 font-bold uppercase tracking-widest transition-colors ${filter === 'male'
-                ? 'bg-[#E63946] text-[#F4F4F5] border-[#E63946]'
-                : 'bg-transparent text-[#a1a1aa] hover:border-[#F4F4F5] hover:text-[#F4F4F5]'
-              }`}
-          >
-            Him [{maleServices.length}]
+            All <span className="text-[10px] ml-1 opacity-60">[{services.length}]</span>
           </button>
           <button
             onClick={() => setFilter('female')}
-            className={`brutalist-pill px-8 py-3 font-bold uppercase tracking-widest transition-colors ${filter === 'female'
-                ? 'bg-[#E63946] text-[#F4F4F5] border-[#E63946]'
-                : 'bg-transparent text-[#a1a1aa] hover:border-[#F4F4F5] hover:text-[#F4F4F5]'
+            className={`font-sans text-xs uppercase tracking-widest transition-colors ${filter === 'female'
+              ? 'text-[#1A1A1A] border-b border-[#1A1A1A] pb-1 font-medium'
+              : 'text-[#1A1A1A]/40 hover:text-[#1A1A1A]'
               }`}
           >
-            Her [{femaleServices.length}]
+            Her <span className="text-[10px] ml-1 opacity-60">[{femaleServices.length}]</span>
+          </button>
+          <button
+            onClick={() => setFilter('male')}
+            className={`font-sans text-xs uppercase tracking-widest transition-colors ${filter === 'male'
+              ? 'text-[#1A1A1A] border-b border-[#1A1A1A] pb-1 font-medium'
+              : 'text-[#1A1A1A]/40 hover:text-[#1A1A1A]'
+              }`}
+          >
+            Him <span className="text-[10px] ml-1 opacity-60">[{maleServices.length}]</span>
           </button>
           <button
             onClick={() => setFilter('unisex')}
-            className={`brutalist-pill px-8 py-3 font-bold uppercase tracking-widest transition-colors ${filter === 'unisex'
-                ? 'bg-[#E63946] text-[#F4F4F5] border-[#E63946]'
-                : 'bg-transparent text-[#a1a1aa] hover:border-[#F4F4F5] hover:text-[#F4F4F5]'
+            className={`font-sans text-xs uppercase tracking-widest transition-colors ${filter === 'unisex'
+              ? 'text-[#1A1A1A] border-b border-[#1A1A1A] pb-1 font-medium'
+              : 'text-[#1A1A1A]/40 hover:text-[#1A1A1A]'
               }`}
           >
-            Unisex [{unisexServices.length}]
+            Unisex <span className="text-[10px] ml-1 opacity-60">[{unisexServices.length}]</span>
           </button>
         </motion.div>
 
-        {/* Services Grid */}
-        <div className="max-w-7xl mx-auto">
+        {/* Services List/Grid */}
+        <div className="max-w-6xl mx-auto">
           {filteredServices.length > 0 ? (
             <motion.div
               {...fadeInUp}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+              className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24"
             >
               {filteredServices.map((service, index) => (
                 <motion.div
                   key={service._id}
                   {...fadeInUp}
-                  transition={{ delay: 0.5 + index * 0.1, duration: 0.8 }}
-                  className="group flex flex-col relative bg-[#1C1C1C] brutalist-border overflow-hidden"
+                  transition={{ delay: 0.5 + Math.min(index * 0.1, 0.5), duration: 0.8 }}
+                  className="group flex flex-col md:flex-row gap-8 items-start"
                 >
-                  <div className="w-full h-80 bg-[#121212] relative overflow-hidden brutalist-border-b">
+                  <div className="w-full md:w-48 h-64 md:h-64 relative overflow-hidden shrink-0">
                     <img
                       src={getServiceImage(service.name, service.category)}
                       alt={service.name}
                       loading="lazy"
-                      className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
-                    <div className="absolute top-4 left-4">
-                      <span className="brutalist-pill bg-[#121212]/80 backdrop-blur border-none px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#F4F4F5]">
-                        {service.category}
-                      </span>
-                    </div>
                   </div>
 
-                  <div className="p-8 flex flex-col flex-1">
-                    <div className="flex justify-between items-start mb-6 gap-4">
-                      <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tight leading-none">{service.name}</h3>
-                      <p className="text-2xl font-black text-[#E63946]">₹{service.price}</p>
+                  <div className="flex flex-col flex-1 h-full py-2">
+                    <div className="flex justify-between items-start mb-4 gap-4 border-b elegant-border-b pb-4">
+                      <h3 className="text-2xl font-serif text-[#1A1A1A]">{service.name}</h3>
+                      <p className="font-sans font-light text-[#1A1A1A]">₹{service.price}</p>
                     </div>
-                    <p className="text-[#a1a1aa] font-medium mb-8 flex-1 leading-relaxed">
+                    <p className="text-[#1A1A1A]/70 font-sans font-light text-sm leading-relaxed mb-6">
                       {service.description}
                     </p>
-                    <div className="flex items-center justify-between mt-auto pt-8 brutalist-border-t border-[#27272A]">
-                      <p className="text-sm font-bold uppercase tracking-widest text-[#a1a1aa]">{service.duration} MINS</p>
+
+                    <div className="mt-auto flex items-center justify-between pt-4">
+                      <span className="text-[#1A1A1A]/40 font-sans text-xs uppercase tracking-widest">
+                        {service.duration} mins • {service.category}
+                      </span>
 
                       <button
                         onClick={() =>
@@ -183,9 +180,9 @@ function ServicePage() {
                             ? navigate(`/appointments/new?serviceId=${service._id}`)
                             : navigate('/login')
                         }
-                        className="brutalist-pill px-8 py-3 bg-transparent text-[#F4F4F5] font-bold hover:bg-[#E63946] hover:border-[#E63946] transition-colors uppercase tracking-widest text-sm"
+                        className="font-sans text-xs uppercase tracking-widest font-medium hover:text-[#DDA7A5] transition-colors flex items-center gap-2"
                       >
-                        BOOK
+                        Reserve <span>→</span>
                       </button>
                     </div>
                   </div>
@@ -196,9 +193,9 @@ function ServicePage() {
             <motion.div
               {...fadeInUp}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-center py-24 brutalist-border bg-[#1C1C1C]"
+              className="text-center py-24"
             >
-              <p className="text-[#a1a1aa] text-2xl font-black uppercase tracking-widest">No services match your criteria.</p>
+              <p className="text-[#1A1A1A]/40 text-lg font-serif italic">No treatments match your refinement.</p>
             </motion.div>
           )}
         </div>

@@ -1,3 +1,4 @@
+// src/pages/StylistPage.jsx
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import PageWrapper from "../components/pageWrapper";
@@ -8,7 +9,7 @@ import toast from "react-hot-toast";
 function StylistPage() {
   const [stylists, setStylists] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all"); // all, male, female
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     fetchStylists();
@@ -20,8 +21,7 @@ function StylistPage() {
       const res = await axios.get("/stylists");
       setStylists(res.data);
     } catch (err) {
-      console.error("Failed to fetch stylists:", err);
-      toast.error("Failed to load stylists");
+      toast.error("Failed to load specialists");
     } finally {
       setLoading(false);
     }
@@ -32,33 +32,15 @@ function StylistPage() {
     return stylist.gender === filter;
   });
 
-  const maleStylists = stylists.filter((stylist) => stylist.gender === "male");
-  const femaleStylists = stylists.filter(
-    (stylist) => stylist.gender === "female",
-  );
-
   const getInitials = (name) => {
-    return name
-      .split(" ")
-      .map((word) => word.charAt(0))
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
-  const getGenderColor = (gender) => {
-    return gender === "male"
-      ? "bg-blue-100 text-blue-600"
-      : "bg-purple-100 text-purple-600";
+    return name?.split(" ").map((w) => w.charAt(0)).join("").toUpperCase().slice(0, 2) || "S";
   };
 
   if (loading) {
     return (
       <PageWrapper>
-        <div className="py-10 md:py-16 px-4 md:px-8 max-w-7xl mx-auto">
-          <div className="flex justify-center items-center py-20">
-            <div className="w-12 h-12 border-4 border-pink-300 border-t-transparent rounded-full animate-spin"></div>
-          </div>
+        <div className="flex justify-center items-center h-[80vh] bg-[#FAF9F6] text-[#1A1A1A]">
+          <div className="text-xl font-sans font-light tracking-widest uppercase animate-pulse">Curating Specialists...</div>
         </div>
       </PageWrapper>
     );
@@ -66,236 +48,106 @@ function StylistPage() {
 
   return (
     <PageWrapper>
-      <div className="py-10 md:py-16 px-4 md:px-8 max-w-7xl mx-auto">
-        {/* Main Heading */}
-        <motion.h1
-          {...fadeInUp}
-          className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12"
-        >
-          Our Expert Stylists
-        </motion.h1>
+      <div className="bg-[#FAF9F6] min-h-screen py-16 md:py-24 px-6 md:px-16 text-[#1A1A1A]">
+
+        {/* Header Section */}
+        <div className="max-w-6xl mx-auto mb-16 md:mb-24 text-center">
+          <motion.h1
+            {...fadeInUp}
+            className="text-5xl md:text-7xl lg:text-8xl font-serif text-[#1A1A1A] leading-tight mb-6"
+          >
+            Creative <span className="italic text-[#DDA7A5]">Directors</span>
+          </motion.h1>
+          <motion.p
+            {...fadeInUp}
+            transition={{ delay: 0.2 }}
+            className="text-[#1A1A1A]/60 font-sans font-light max-w-xl mx-auto"
+          >
+            Meet our collective of master stylists, estheticians, and colorists dedicated to your personal refinement.
+          </motion.p>
+        </div>
 
         {/* Filter Buttons */}
         <motion.div
           {...fadeInUp}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="flex justify-center space-x-4 mb-8"
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="max-w-6xl mx-auto flex justify-center gap-8 mb-20 border-b elegant-border-b pb-6"
         >
           <button
-            onClick={() => setFilter("all")}
-            className={`px-6 py-2 rounded-full transition-colors duration-300 font-medium ${filter === "all"
-                ? "bg-pink-500 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            onClick={() => setFilter('all')}
+            className={`font-sans text-xs uppercase tracking-widest transition-colors ${filter === 'all'
+              ? 'text-[#1A1A1A] border-b border-[#1A1A1A] pb-1 font-medium'
+              : 'text-[#1A1A1A]/40 hover:text-[#1A1A1A]'
               }`}
           >
-            All Stylists ({stylists.length})
+            All <span className="text-[10px] ml-1 opacity-60">[{stylists.length}]</span>
           </button>
           <button
-            onClick={() => setFilter("male")}
-            className={`px-6 py-2 rounded-full transition-colors duration-300 font-medium ${filter === "male"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            onClick={() => setFilter('female')}
+            className={`font-sans text-xs uppercase tracking-widest transition-colors ${filter === 'female'
+              ? 'text-[#1A1A1A] border-b border-[#1A1A1A] pb-1 font-medium'
+              : 'text-[#1A1A1A]/40 hover:text-[#1A1A1A]'
               }`}
           >
-            Male ({maleStylists.length})
+            Female Specialists
           </button>
           <button
-            onClick={() => setFilter("female")}
-            className={`px-6 py-2 rounded-full transition-colors duration-300 font-medium ${filter === "female"
-                ? "bg-purple-500 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            onClick={() => setFilter('male')}
+            className={`font-sans text-xs uppercase tracking-widest transition-colors ${filter === 'male'
+              ? 'text-[#1A1A1A] border-b border-[#1A1A1A] pb-1 font-medium'
+              : 'text-[#1A1A1A]/40 hover:text-[#1A1A1A]'
               }`}
           >
-            Female ({femaleStylists.length})
+            Male Specialists
           </button>
         </motion.div>
 
-        {/* Show All Stylists */}
-        {filter === "all" && (
-          <motion.div
-            {...fadeInUp}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-          >
-            {filteredStylists.map((stylist, index) => (
-              <motion.div
-                key={stylist._id}
-                {...fadeInUp}
-                transition={{ delay: 0.5 + index * 0.1, duration: 0.8 }}
-                className="bg-white shadow-lg p-6 rounded-xl text-center hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="w-20 h-20 mx-auto bg-pink-100 rounded-full mb-4 flex items-center justify-center text-2xl font-bold text-pink-600">
-                  {getInitials(stylist.name)}
-                </div>
-                <h3 className="text-lg md:text-xl font-bold mb-2">
-                  {stylist.name}
-                </h3>
-                <p className="text-gray-600 mb-3">
-                  {stylist.specialty || "Hair & Beauty Expert"}
-                </p>
-                <div className="flex items-center justify-center mb-3">
-                  <span className="text-yellow-500 mr-1">⭐</span>
-                  <span className="text-gray-700 font-semibold">
-                    {stylist.rating || "New"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center mb-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${getGenderColor(stylist.gender)}`}
-                  >
-                    {stylist.gender === "male"
-                      ? "Male Stylist"
-                      : "Female Stylist"}
-                  </span>
-                </div>
-                {stylist.experience && (
-                  <p className="text-sm text-gray-500 mb-2">
-                    {stylist.experience} years experience
-                  </p>
-                )}
-                {stylist.experience && (
-                    <p className="text-sm text-gray-500 mb-2">
-                      "{stylist.bio}"
-                    </p>
-                  )}
-                {stylist.branch?.name && (
-                  <p className="text-sm text-pink-600 font-medium">
-                    {stylist.branch.name}
-                  </p>
-                )}
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Show Male Stylists */}
-        {filter === "male" && maleStylists.length > 0 && (
-          <>
-            <motion.h2
-              {...fadeInUp}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-2xl md:text-3xl font-bold text-blue-600 mb-6 text-center"
-            >
-              For Him
-            </motion.h2>
+        {/* Specialists Grid */}
+        <div className="max-w-6xl mx-auto">
+          {filteredStylists.length > 0 ? (
             <motion.div
               {...fadeInUp}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+              transition={{ delay: 0.4 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16"
             >
-              {maleStylists.map((stylist, index) => (
+              {filteredStylists.map((stylist, index) => (
                 <motion.div
                   key={stylist._id}
                   {...fadeInUp}
-                  transition={{ delay: 0.5 + index * 0.1, duration: 0.8 }}
-                  className="bg-white shadow-lg p-6 rounded-xl text-center hover:shadow-xl transition-shadow duration-300"
+                  transition={{ delay: 0.5 + Math.min(index * 0.1, 0.5) }}
+                  className="flex flex-col items-center text-center group"
                 >
-                  <div className="w-20 h-20 mx-auto bg-blue-100 rounded-full mb-4 flex items-center justify-center text-2xl font-bold text-blue-600">
-                    {getInitials(stylist.name)}
+                  {/* Portrait Placeholder */}
+                  <div className="w-56 h-72 bg-[#ebe8e1] mb-8 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[#DDA7A5]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="w-full h-full flex items-center justify-center font-serif text-5xl text-[#1A1A1A]/20">
+                      {getInitials(stylist.name)}
+                    </div>
                   </div>
-                  <h3 className="text-lg md:text-xl font-bold mb-2">
-                    {stylist.name}
-                  </h3>
-                  <p className="text-gray-600 mb-3">
-                    {stylist.specialty || "Hair & Beauty Expert"}
+
+                  <h3 className="text-3xl font-serif text-[#1A1A1A] mb-2">{stylist.name}</h3>
+                  <p className="font-sans font-medium text-xs uppercase tracking-widest text-[#DDA7A5] mb-4">
+                    {stylist.specialty || "Master Stylist"}
                   </p>
-                  <div className="flex items-center justify-center mb-3">
-                    <span className="text-yellow-500 mr-1">⭐</span>
-                    <span className="text-gray-700 font-semibold">
-                      {stylist.rating || "New"}
-                    </span>
+
+                  <p className="text-[#1A1A1A]/70 font-sans font-light text-sm leading-relaxed mb-6 max-w-xs">
+                    {stylist.bio || "A dedicated professional with a passion for creative vision and absolute perfection in every detail."}
+                  </p>
+
+                  <div className="font-sans text-[10px] uppercase tracking-widest text-[#1A1A1A]/40 flex items-center gap-4">
+                    {stylist.experience && <span>{stylist.experience} YRS EXP</span>}
+                    {stylist.rating && <span>• {stylist.rating} STR</span>}
                   </div>
-                  {stylist.experience && (
-                    <p className="text-sm text-gray-500 mb-2">
-                      {stylist.experience} years experience
-                    </p>
-                  )}
-                  {stylist.experience && (
-                    <p className="text-sm text-gray-500 mb-2">
-                      "{stylist.bio}"
-                    </p>
-                  )}
-                  {stylist.branch?.name && (
-                    <p className="text-sm text-blue-600 font-medium">
-                      {stylist.branch.name}
-                    </p>
-                  )}
                 </motion.div>
               ))}
             </motion.div>
-          </>
-        )}
-
-        {/* Show Female Stylists */}
-        {filter === "female" && femaleStylists.length > 0 && (
-          <>
-            <motion.h2
-              {...fadeInUp}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-2xl md:text-3xl font-bold text-purple-600 mb-6 text-center"
-            >
-              For Her
-            </motion.h2>
-            <motion.div
-              {...fadeInUp}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-            >
-              {femaleStylists.map((stylist, index) => (
-                <motion.div
-                  key={stylist._id}
-                  {...fadeInUp}
-                  transition={{ delay: 0.5 + index * 0.1, duration: 0.8 }}
-                  className="bg-white shadow-lg p-6 rounded-xl text-center hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="w-20 h-20 mx-auto bg-purple-100 rounded-full mb-4 flex items-center justify-center text-2xl font-bold text-purple-600">
-                    {getInitials(stylist.name)}
-                  </div>
-                  <h3 className="text-lg md:text-xl font-bold mb-2">
-                    {stylist.name}
-                  </h3>
-                  <p className="text-gray-600 mb-3">
-                    {stylist.specialty || "Hair & Beauty Expert"}
-                  </p>
-                  <div className="flex items-center justify-center mb-3">
-                    <span className="text-yellow-500 mr-1">⭐</span>
-                    <span className="text-gray-700 font-semibold">
-                      {stylist.rating || "New"}
-                    </span>
-                  </div>
-                  {stylist.experience && (
-                    <p className="text-sm text-gray-500 mb-2">
-                      {stylist.experience} years experience
-                    </p>
-                  )}
-                  {stylist.experience && (
-                    <p className="text-sm text-gray-500 mb-2">
-                      "{stylist.bio}"
-                    </p>
-                  )}
-                  {stylist.branch?.name && (
-                    <p className="text-sm text-purple-600 font-medium">
-                      {stylist.branch.name}
-                    </p>
-                  )}
-                </motion.div>
-              ))}
+          ) : (
+            <motion.div {...fadeInUp} className="text-center py-24">
+              <p className="text-[#1A1A1A]/40 text-lg font-serif italic">No specialists match your refinement.</p>
             </motion.div>
-          </>
-        )}
+          )}
+        </div>
 
-        {/* No Stylists Found */}
-        {filteredStylists.length === 0 && (
-          <motion.div
-            {...fadeInUp}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-center py-12"
-          >
-            <p className="text-gray-500 text-lg">
-              No stylists found for this category.
-            </p>
-          </motion.div>
-        )}
       </div>
     </PageWrapper>
   );

@@ -12,7 +12,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout()
-    toast.success('LOGGED OUT.')
+    toast.success('Signed out seamlessly.')
     setIsOpen(false)
     setShowDropdown(false)
     navigate('/')
@@ -24,89 +24,90 @@ function Navbar() {
     setShowDropdown(false)
   }
 
-  const firstName = user?.name?.split(' ')[0] || 'USER'
+  const firstName = user?.name?.split(' ')[0] || 'User'
   const avatarInitial = user?.name?.charAt(0)?.toUpperCase() || 'U'
 
   return (
-    <nav className="relative bg-[#121212] border-b border-[#27272A] py-4 px-6 md:px-12 flex justify-between items-center z-50 text-[#F4F4F5]">
+    <nav className="relative bg-[#FAF9F6] border-b elegant-border-b py-6 px-6 md:px-16 flex justify-between items-center z-50 text-[#1A1A1A]">
       {/* Brand */}
-      <Link to="/" className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-[#F4F4F5] hover:text-[#E63946] transition-colors">
-        Salon <span className="text-[#E63946]">Desk</span>.
+      <Link to="/" className="text-3xl md:text-4xl font-serif tracking-wide text-[#1A1A1A] hover:opacity-70 transition-opacity">
+        Éclat <span className="italic text-[#DDA7A5]">Salon</span>
       </Link>
 
       {/* Desktop Menu */}
-      <div className="hidden md:flex space-x-8 font-bold text-sm tracking-widest uppercase items-center">
-        <Link to="/" className="hover:text-[#E63946] transition-colors">Home</Link>
-        <Link to="/services" className="hover:text-[#E63946] transition-colors">Services</Link>
-        <Link to="/stylist" className="hover:text-[#E63946] transition-colors">Stylists</Link>
+      <div className="hidden md:flex space-x-12 font-sans font-light text-sm tracking-[0.15em] uppercase items-center">
+        <Link to="/" className="hover:text-[#DDA7A5] transition-colors">Home</Link>
+        <Link to="/services" className="hover:text-[#DDA7A5] transition-colors">Services</Link>
+        <Link to="/stylist" className="hover:text-[#DDA7A5] transition-colors">Stylists</Link>
+
         {/* Show Book only for logged in clients */}
         {role === 'client' && (
-          <Link to="/appointment" className="hover:text-[#E63946] transition-colors">Book</Link>
+          <Link to="/appointment" className="hover:text-[#DDA7A5] transition-colors">Reserve</Link>
         )}
 
         {role ? (
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-3 px-6 py-2 brutalist-pill bg-transparent hover:bg-[#E63946] hover:border-[#E63946] transition-colors group"
+              className="flex items-center gap-3 px-2 py-2 hover:opacity-70 transition-opacity group"
             >
-              <div className="w-8 h-8 rounded-full bg-[#F4F4F5] text-[#121212] flex items-center justify-center font-black">
+              <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-[#FAF9F6] flex items-center justify-center font-sans font-medium text-xs">
                 {avatarInitial}
               </div>
-              <span className="font-bold text-[#F4F4F5]">{firstName}</span>
-              <ChevronDown size={18} className="text-[#F4F4F5]" />
+              <span className="font-sans font-medium">{firstName}</span>
+              <ChevronDown size={14} className="text-[#1A1A1A]" />
             </button>
             {showDropdown && (
-              <div className="absolute right-0 mt-4 bg-[#1C1C1C] brutalist-border w-56 z-50 flex flex-col">
+              <div className="absolute right-0 mt-4 bg-[#FAF9F6] border elegant-border w-56 z-50 flex flex-col shadow-sm">
                 <button
                   onClick={handleDashboard}
-                  className="w-full text-left px-6 py-4 text-sm font-bold uppercase tracking-widest hover:bg-[#27272A] transition-colors border-b border-[#27272A]"
+                  className="w-full text-left px-6 py-4 text-xs font-sans font-medium uppercase tracking-widest hover:bg-[#F0EDE5] transition-colors border-b elegant-border-b"
                 >
                   Dashboard
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-6 py-4 text-sm font-bold uppercase tracking-widest text-[#E63946] hover:bg-[#27272A] transition-colors"
+                  className="w-full text-left px-6 py-4 text-xs font-sans font-medium uppercase tracking-widest text-[#DDA7A5] hover:bg-[#F0EDE5] transition-colors"
                 >
-                  Logout
+                  Sign Out
                 </button>
               </div>
             )}
           </div>
         ) : (
-          <Link to="/login" className="brutalist-pill px-6 py-2 text-[#F4F4F5] hover:bg-[#F4F4F5] hover:text-[#121212] transition-colors">
-            Login / Portal
+          <Link to="/login" className="elegant-button">
+            Sign In / Portal
           </Link>
         )}
       </div>
 
       {/* Mobile Hamburger */}
       <div className="md:hidden">
-        <button onClick={() => setIsOpen(!isOpen)} className="text-[#F4F4F5] hover:text-[#E63946] transition-colors">
-          {isOpen ? <X size={32} /> : <Menu size={32} />}
+        <button onClick={() => setIsOpen(!isOpen)} className="text-[#1A1A1A] hover:text-[#DDA7A5] transition-colors">
+          {isOpen ? <X size={28} strokeWidth={1} /> : <Menu size={28} strokeWidth={1} />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 w-full bg-[#121212] brutalist-border-b border-[#27272A] flex flex-col items-start px-6 py-8 space-y-6 z-40 md:hidden font-black text-2xl uppercase tracking-widest">
-          <Link to="/" onClick={() => setIsOpen(false)} className="w-full hover:text-[#E63946] transition-colors">Home</Link>
-          <Link to="/services" onClick={() => setIsOpen(false)} className="w-full hover:text-[#E63946] transition-colors">Services</Link>
-          <Link to="/stylist" onClick={() => setIsOpen(false)} className="w-full hover:text-[#E63946] transition-colors">Stylists</Link>
+        <div className="absolute top-full left-0 w-full bg-[#FAF9F6] border-b elegant-border-b flex flex-col items-start px-6 py-12 space-y-8 z-40 md:hidden font-sans font-light text-xl uppercase tracking-widest">
+          <Link to="/" onClick={() => setIsOpen(false)} className="w-full hover:text-[#DDA7A5] transition-colors">Home</Link>
+          <Link to="/services" onClick={() => setIsOpen(false)} className="w-full hover:text-[#DDA7A5] transition-colors">Services</Link>
+          <Link to="/stylist" onClick={() => setIsOpen(false)} className="w-full hover:text-[#DDA7A5] transition-colors">Stylists</Link>
 
           {role === 'client' && (
-            <Link to="/appointment" onClick={() => setIsOpen(false)} className="w-full text-[#E63946] hover:text-[#F4F4F5] transition-colors">Book</Link>
+            <Link to="/appointment" onClick={() => setIsOpen(false)} className="w-full text-[#DDA7A5] hover:opacity-70 transition-opacity">Reserve</Link>
           )}
 
-          <div className="w-full h-px bg-[#27272A] my-4"></div>
+          <div className="w-full h-px bg-[rgba(26,26,26,0.1)] my-6"></div>
 
           {role ? (
             <>
-              <button w-full onClick={handleDashboard} className="text-left w-full hover:text-[#E63946] transition-colors">Dashboard</button>
-              <button w-full onClick={handleLogout} className="text-left w-full text-[#E63946] hover:text-[#F4F4F5] transition-colors">Logout</button>
+              <button onClick={handleDashboard} className="text-left w-full hover:text-[#DDA7A5] transition-colors">Dashboard</button>
+              <button onClick={handleLogout} className="text-left w-full text-[#DDA7A5] hover:opacity-70 transition-opacity">Sign Out</button>
             </>
           ) : (
-            <Link to="/login" onClick={() => setIsOpen(false)} className="w-full text-[#E63946] hover:text-[#F4F4F5] transition-colors">Login / Portal</Link>
+            <Link to="/login" onClick={() => setIsOpen(false)} className="w-full text-[#DDA7A5] hover:opacity-70 transition-opacity">Sign In / Portal</Link>
           )}
         </div>
       )}

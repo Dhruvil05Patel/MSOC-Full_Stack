@@ -6,7 +6,7 @@ import { useUser } from '../context/UserContext'
 import axios from '../utils/axios'
 import toast from 'react-hot-toast'
 import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts'
 
 function DashboardPage() {
@@ -38,7 +38,6 @@ function DashboardPage() {
         toast.error("Failed to fetch appointments")
       }
     } catch (err) {
-      console.error('Error fetching appointments:', err)
       toast.error("Failed to fetch appointments")
     } finally {
       setLoading(false)
@@ -48,10 +47,10 @@ function DashboardPage() {
   const cancelAppointment = async (id) => {
     try {
       await axios.put(`/appointments/${id}/status`, { status: "cancelled" })
-      toast.success("Appointment cancelled")
+      toast.success("Reservation cancelled")
       fetchAppointments(user.id || user._id)
     } catch (err) {
-      toast.error("Failed to cancel appointment")
+      toast.error("Failed to cancel reservation")
     }
   }
 
@@ -59,19 +58,19 @@ function DashboardPage() {
     try {
       const res = await axios.put(`/users/${user.id || user._id}`, editForm)
       if (res.data.success) {
-        toast.success("Profile updated")
+        toast.success("Profile refined")
         setShowEditModal(false)
       }
     } catch (err) {
-      toast.error("Failed to update profile")
+      toast.error("Failed to refine profile")
     }
   }
 
   if (userLoading || loading) {
     return (
       <PageWrapper>
-        <div className="flex h-[80vh] items-center justify-center font-bold text-2xl uppercase tracking-widest text-[#F4F4F5]">
-          Loading...
+        <div className="flex justify-center items-center h-[80vh] bg-[#FAF9F6] text-[#1A1A1A]">
+          <div className="text-xl font-sans font-light tracking-widest uppercase animate-pulse">Accessing Sanctuary...</div>
         </div>
       </PageWrapper>
     )
@@ -80,14 +79,16 @@ function DashboardPage() {
   if (!user) {
     return (
       <PageWrapper>
-        <div className="flex h-[80vh] items-center justify-center font-bold text-2xl uppercase tracking-widest text-[#F4F4F5]">
-          ACCESS DENIED. PLEASE LOGIN.
+        <div className="flex justify-center items-center h-[80vh] bg-[#FAF9F6] text-[#1A1A1A]">
+          <div className="text-center">
+            <h2 className="text-4xl font-serif italic text-[#DDA7A5] mb-4">Access Restricted</h2>
+            <p className="font-sans text-xs tracking-widest uppercase text-[#1A1A1A]/60">Please identify yourself.</p>
+          </div>
         </div>
       </PageWrapper>
     )
   }
 
-  // 📊 Prepare chart data
   const expenseData = history.map(h => ({
     service: h.service?.name,
     cost: h.service?.price || 0
@@ -100,199 +101,199 @@ function DashboardPage() {
 
   return (
     <PageWrapper>
-      <div className="py-10 md:py-20 px-4 md:px-8 max-w-7xl mx-auto text-[#F4F4F5]">
+      <div className="bg-[#FAF9F6] min-h-screen py-24 px-6 md:px-16 text-[#1A1A1A]">
         {/* Heading */}
-        <motion.h1 {...fadeInUp} className="text-6xl md:text-8xl lg:text-9xl font-black mb-16 tracking-tighter uppercase leading-none">
-          Client <br />
-          <span className="text-[#E63946]">Dashboard</span>
-        </motion.h1>
+        <div className="max-w-6xl mx-auto mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-end gap-8 border-b elegant-border-b pb-8">
+          <div>
+            <motion.h1 {...fadeInUp} className="text-5xl md:text-7xl font-serif text-[#1A1A1A] leading-tight">
+              Your <span className="italic text-[#DDA7A5]">Sanctuary</span>
+            </motion.h1>
+            <p className="mt-4 font-sans font-medium text-xs uppercase tracking-widest text-[#1A1A1A]/60">
+              Welcome back, {user.name}
+            </p>
+          </div>
 
-        {/* Profile Grid */}
-        <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="brutalist-border bg-[#1C1C1C] p-8 md:p-12 mb-16 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          <div className="md:col-span-1">
-            <div className="w-32 h-32 md:w-48 md:h-48 bg-[#121212] brutalist-border overflow-hidden relative">
-              {user.profilePhoto ? (
-                <img 
-                  src={user.profilePhoto} 
-                  alt="Profile" 
-                  className="w-full h-full object-cover grayscale contrast-125"
-                  onError={(e) => {
-                    e.target.style.display = 'none'
-                    e.target.nextSibling.style.display = 'flex'
-                  }}
-                />
-              ) : null}
-              <div className={`w-full h-full flex items-center justify-center text-6xl font-black text-[#E63946] ${user.profilePhoto ? 'hidden' : 'flex'}`}>
-                {user.name?.charAt(0)?.toUpperCase()}
-              </div>
-            </div>
-          </div>
-          
-          <div className="md:col-span-2 space-y-4">
-            <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-tight">{user.name}</h2>
-            <div className="flex flex-col space-y-2 text-[#a1a1aa] uppercase tracking-widest text-sm font-medium">
-              <span>{user.email}</span>
-              <span>{user.phone || "NO PHONE ADDED"}</span>
-            </div>
-            <div className="pt-6">
-              <button
-                onClick={() => setShowEditModal(true)}
-                className="brutalist-pill px-8 py-3 bg-[#E63946] text-[#F4F4F5] font-bold hover:bg-[#121212] hover:text-[#E63946] hover:border-[#E63946] transition-colors"
-              >
-                Edit Profile
-              </button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Analytics Section */}
-        <motion.div {...fadeInUp} transition={{ delay: 0.3 }} className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
-          {/* Expenses */}
-          <div className="brutalist-border bg-[#1C1C1C] p-6 md:p-10">
-            <h3 className="text-4xl md:text-5xl font-black mb-8 uppercase tracking-tight">Total Expenses</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={expenseData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272A" />
-                <XAxis dataKey="service" stroke="#F4F4F5" tick={{fill: '#F4F4F5', fontSize: 12, fontFamily: 'Space Grotesk'}} />
-                <YAxis stroke="#F4F4F5" tick={{fill: '#F4F4F5', fontFamily: 'Space Grotesk'}} />
-                <Tooltip cursor={{fill: '#27272A'}} contentStyle={{backgroundColor: '#121212', border: '1px solid #27272A', fontFamily: 'Space Grotesk'}} />
-                <Bar dataKey="cost" fill="#E63946" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          {/* Appointments */}
-          <div className="brutalist-border bg-[#1C1C1C] p-6 md:p-10">
-            <h3 className="text-4xl md:text-5xl font-black mb-8 uppercase tracking-tight">Activity</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={appointmentData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272A" />
-                <XAxis dataKey="date" stroke="#F4F4F5" tick={{fill: '#F4F4F5', fontSize: 12, fontFamily: 'Space Grotesk'}} />
-                <YAxis stroke="#F4F4F5" tick={{fill: '#F4F4F5', fontFamily: 'Space Grotesk'}} />
-                <Tooltip contentStyle={{backgroundColor: '#121212', border: '1px solid #27272A', fontFamily: 'Space Grotesk'}} />
-                <Line type="monotone" dataKey="count" stroke="#E63946" strokeWidth={4} dot={{r: 6, fill: '#E63946', strokeWidth: 2, stroke: '#1C1C1C'}} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </motion.div>
+          <button
+            onClick={() => setShowEditModal(true)}
+            className="elegant-button-filled px-8 py-3 text-xs"
+          >
+            Refine Profile
+          </button>
+        </div>
 
         {/* Upcoming Appointments */}
-        <motion.h2 {...fadeInUp} transition={{ delay: 0.3 }} className="text-5xl md:text-7xl font-black text-[#E63946] mb-8 uppercase brutalist-border-b pb-4">
-          Upcoming
-        </motion.h2>
+        <div className="max-w-6xl mx-auto mb-24">
+          <motion.h2 {...fadeInUp} className="text-3xl font-serif mb-10 border-b elegant-border-b pb-4">
+            Upcoming <span className="italic text-[#DDA7A5]">Reservations</span>
+          </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-          {upcoming.length > 0 ? (
-            upcoming.map((appt, index) => (
-              <motion.div
-                key={appt._id}
-                {...fadeInUp}
-                transition={{ delay: 0.4 + index * 0.1 }}
-                className="brutalist-border bg-[#1C1C1C] p-8 flex flex-col justify-between"
-              >
-                <div>
-                  <h3 className="text-3xl font-black mb-2 uppercase tracking-tight">{appt.service?.name}</h3>
-                  <p className="text-[#a1a1aa] uppercase text-sm tracking-widest mb-6">W/ {appt.stylist?.name}</p>
-                  <div className="font-mono text-lg mb-8 uppercase bg-[#121212] p-4 brutalist-border pb-3">
-                    {new Date(appt.date).toLocaleDateString()} <br/> {appt.time}
-                  </div>
-                </div>
-                <button
-                  onClick={() => cancelAppointment(appt._id)}
-                  className="brutalist-pill w-full py-4 bg-transparent text-[#F4F4F5] hover:bg-[#E63946] hover:border-[#E63946] transition-colors font-bold"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {upcoming.length > 0 ? (
+              upcoming.map((appt, index) => (
+                <motion.div
+                  key={appt._id}
+                  {...fadeInUp}
+                  transition={{ delay: 0.2 + index * 0.1 }}
+                  className="bg-white/50 backdrop-blur-sm p-8 flex flex-col justify-between border elegant-border transition-shadow hover:shadow-sm"
                 >
-                  Cancel Appt
-                </button>
-              </motion.div>
-            ))
-          ) : (
-            <div className="col-span-full brutalist-border p-16 text-center text-[#a1a1aa] font-bold text-xl md:text-2xl uppercase tracking-widest">
-              No upcoming appointments. <br />
-              <span className="text-[#F4F4F5]">Schedule one today.</span>
+                  <div className="mb-10">
+                    <p className="font-sans font-medium text-[10px] uppercase tracking-widest text-[#DDA7A5] mb-4">
+                      {new Date(appt.date).toLocaleDateString()} at {appt.time}
+                    </p>
+                    <h3 className="text-2xl font-serif mb-2">{appt.service?.name}</h3>
+                    <p className="text-[#1A1A1A]/60 font-sans text-xs tracking-widest uppercase">
+                      Spec. {appt.stylist?.name}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => cancelAppointment(appt._id)}
+                    className="text-xs font-sans tracking-widest uppercase border-b border-[#1A1A1A]/20 pb-1 text-[#1A1A1A]/60 hover:text-[#DDA7A5] hover:border-[#DDA7A5] transition-colors self-start"
+                  >
+                    Cancel Reservation
+                  </button>
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-full py-16 text-center">
+                <p className="text-[#1A1A1A]/40 text-lg font-serif italic">Your diary is currently empty.</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Analytics Section */}
+        <div className="max-w-6xl mx-auto mb-24 grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Expenses */}
+          <motion.div {...fadeInUp} transition={{ delay: 0.3 }}>
+            <h3 className="text-2xl font-serif mb-8 border-b elegant-border-b pb-4">Treatment <span className="italic text-[#1A1A1A]/50">Investment</span></h3>
+            <div className="bg-white/30 backdrop-blur-sm border elegant-border p-6 rounded-lg">
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={expenseData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#FAF9F6" vertical={false} />
+                  <XAxis dataKey="service" stroke="#1A1A1A" tick={{ fill: '#1A1A1A', fontSize: 10, fontFamily: 'Inter' }} axisLine={false} tickLine={false} />
+                  <YAxis stroke="#1A1A1A" tick={{ fill: '#1A1A1A', fontSize: 10, fontFamily: 'Inter' }} axisLine={false} tickLine={false} />
+                  <Tooltip cursor={{ fill: '#FAF9F6' }} contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e5e5', borderRadius: '4px', fontFamily: 'Inter', fontSize: '12px' }} />
+                  <Bar dataKey="cost" fill="#DDA7A5" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
-          )}
+          </motion.div>
+
+          {/* Appointments */}
+          <motion.div {...fadeInUp} transition={{ delay: 0.4 }}>
+            <h3 className="text-2xl font-serif mb-8 border-b elegant-border-b pb-4">Visit <span className="italic text-[#1A1A1A]/50">Cadence</span></h3>
+            <div className="bg-white/30 backdrop-blur-sm border elegant-border p-6 rounded-lg">
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={appointmentData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#FAF9F6" vertical={false} />
+                  <XAxis dataKey="date" stroke="#1A1A1A" tick={{ fill: '#1A1A1A', fontSize: 10, fontFamily: 'Inter' }} axisLine={false} tickLine={false} />
+                  <YAxis stroke="#1A1A1A" tick={{ fill: '#1A1A1A', fontSize: 10, fontFamily: 'Inter' }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e5e5', borderRadius: '4px', fontFamily: 'Inter', fontSize: '12px' }} />
+                  <Line type="monotone" dataKey="count" stroke="#DDA7A5" strokeWidth={3} dot={{ r: 4, fill: '#fff', strokeWidth: 2, stroke: '#DDA7A5' }} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
         </div>
 
         {/* Appointment History */}
-        <motion.h2 {...fadeInUp} transition={{ delay: 0.6 }} className="text-5xl md:text-7xl font-black mb-8 uppercase brutalist-border-b pb-4 text-[#F4F4F5]">
-          History
-        </motion.h2>
+        <div className="max-w-6xl mx-auto">
+          <motion.h2 {...fadeInUp} transition={{ delay: 0.5 }} className="text-3xl font-serif mb-10 border-b elegant-border-b pb-4">
+            Past <span className="italic text-[#1A1A1A]/40">Experiences</span>
+          </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-          {history.length > 0 ? (
-            history.map((appt, index) => (
-              <motion.div
-                key={appt._id}
-                {...fadeInUp}
-                transition={{ delay: 0.7 + index * 0.1 }}
-                className="brutalist-border p-8 flex flex-col justify-between opacity-70 hover:opacity-100 transition-opacity"
-              >
-                <div>
-                  <h3 className="text-3xl font-black mb-2 uppercase text-[#a1a1aa] tracking-tight">{appt.service?.name}</h3>
-                  <p className="text-[#a1a1aa] uppercase text-sm tracking-widest mb-6">W/ {appt.stylist?.name}</p>
-                  <div className="font-mono text-lg mb-8 text-[#F4F4F5]">
-                    {new Date(appt.date).toLocaleDateString()}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {history.length > 0 ? (
+              history.map((appt, index) => (
+                <motion.div
+                  key={appt._id}
+                  {...fadeInUp}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                  className="p-6 border elegant-border bg-transparent flex flex-col justify-between"
+                >
+                  <div className="mb-6">
+                    <p className="font-sans text-[10px] tracking-widest uppercase text-[#1A1A1A]/40 mb-2">
+                      {new Date(appt.date).toLocaleDateString()}
+                    </p>
+                    <h3 className="text-xl font-serif text-[#1A1A1A] mb-1">{appt.service?.name}</h3>
+                    <p className="text-[#1A1A1A]/60 font-sans text-[10px] tracking-widest uppercase">
+                      Spec. {appt.stylist?.name}
+                    </p>
                   </div>
-                </div>
-                <div className={`brutalist-pill text-center py-3 font-bold text-sm ${appt.status === "completed" ? "bg-[#27272A] text-[#F4F4F5] border-[#27272A]" : "border-[#E63946] text-[#E63946]"}`}>
-                  {appt.status}
-                </div>
-              </motion.div>
-            ))
-          ) : (
-            <div className="col-span-full brutalist-border p-16 text-center text-[#a1a1aa] font-bold text-xl uppercase tracking-widest">
-              No past appointments found.
-            </div>
-          )}
+                  <div className="font-sans text-[9px] uppercase tracking-widest text-[#DDA7A5] font-medium">
+                    {appt.status}
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-full py-16 text-center">
+                <p className="text-[#1A1A1A]/40 font-serif italic">No past records to display.</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Profile Edit Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-[#121212]/95 flex items-center justify-center z-50 p-4 backdrop-blur-md">
-          <div className="brutalist-border bg-[#1C1C1C] p-8 md:p-12 w-full max-w-xl">
-            <h2 className="text-5xl md:text-6xl font-black mb-10 uppercase tracking-tighter">Edit <span className="text-[#E63946]">Profile</span></h2>
+        <div className="fixed inset-0 bg-[#FAF9F6]/80 backdrop-blur-md flex items-center justify-center z-50 p-6">
+          <div className="bg-white border elegant-border p-10 md:p-14 w-full max-w-lg shadow-xl shadow-[#1A1A1A]/5 rounded-2xl">
+            <h2 className="text-3xl font-serif mb-10 text-center">Refine <span className="italic text-[#DDA7A5]">Details</span></h2>
+
             <div className="space-y-6">
-              <input
-                type="text"
-                value={editForm.name}
-                onChange={e => setEditForm({ ...editForm, name: e.target.value })}
-                placeholder="NAME"
-                className="w-full p-5 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest focus:outline-none focus:border-[#E63946] transition-colors placeholder-[#a1a1aa]"
-              />
-              <input
-                type="email"
-                value={editForm.email}
-                onChange={e => setEditForm({ ...editForm, email: e.target.value })}
-                placeholder="EMAIL"
-                className="w-full p-5 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest focus:outline-none focus:border-[#E63946] transition-colors placeholder-[#a1a1aa]"
-              />
-              <input
-                type="password"
-                value={editForm.password}
-                onChange={e => setEditForm({ ...editForm, password: e.target.value })}
-                placeholder="NEW PASSWORD (OPTIONAL)"
-                className="w-full p-5 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest focus:outline-none focus:border-[#E63946] transition-colors placeholder-[#a1a1aa]"
-              />
-              <input
-                type="text"
-                value={editForm.phone || ""}
-                onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
-                placeholder="PHONE NUMBER"
-                className="w-full p-5 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest focus:outline-none focus:border-[#E63946] transition-colors placeholder-[#a1a1aa]"
-              />
+              <div className="space-y-2">
+                <label className="text-[10px] font-sans tracking-widest uppercase text-[#1A1A1A]/60">Full Name</label>
+                <input
+                  type="text"
+                  value={editForm.name}
+                  onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                  className="elegant-input"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-sans tracking-widest uppercase text-[#1A1A1A]/60">Email Address</label>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={e => setEditForm({ ...editForm, email: e.target.value })}
+                  className="elegant-input"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-sans tracking-widest uppercase text-[#1A1A1A]/60">Phone Number</label>
+                <input
+                  type="text"
+                  value={editForm.phone || ""}
+                  onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
+                  className="elegant-input"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-sans tracking-widest uppercase text-[#1A1A1A]/60">New Password (Optional)</label>
+                <input
+                  type="password"
+                  value={editForm.password}
+                  onChange={e => setEditForm({ ...editForm, password: e.target.value })}
+                  className="elegant-input"
+                />
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row justify-end mt-12 space-y-4 sm:space-y-0 sm:space-x-4">
-              <button 
-                onClick={() => setShowEditModal(false)} 
-                className="brutalist-pill w-full sm:w-auto px-10 py-4 bg-transparent text-[#F4F4F5] font-bold hover:bg-[#27272A] hover:border-[#27272A] transition-colors"
+
+            <div className="flex flex-col sm:flex-row justify-end mt-12 gap-4">
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="font-sans text-xs uppercase tracking-widest px-6 py-4 text-[#1A1A1A]/60 hover:text-[#1A1A1A] transition-colors"
               >
-                CANCEL
+                Dismiss
               </button>
-              <button 
-                onClick={handleProfileUpdate} 
-                className="brutalist-pill w-full sm:w-auto px-10 py-4 bg-[#E63946] border-[#E63946] text-[#F4F4F5] font-bold hover:bg-transparent hover:text-[#E63946] transition-colors"
+              <button
+                onClick={handleProfileUpdate}
+                className="elegant-button-filled px-10 py-4"
               >
-                SAVE CHANGES
+                Save Refinements
               </button>
             </div>
           </div>

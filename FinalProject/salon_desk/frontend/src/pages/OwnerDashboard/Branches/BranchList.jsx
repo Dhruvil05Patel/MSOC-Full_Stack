@@ -23,7 +23,7 @@ function BranchList() {
       const res = await axios.get('/branches')
       setBranches(res.data)
     } catch (err) {
-      toast.error('Failed to load branches')
+      toast.error('Failed to load sanctuaries')
     } finally {
       setLoading(false)
     }
@@ -48,82 +48,84 @@ function BranchList() {
   )
 
   return (
-    <motion.div {...fadeInUp} className="p-6">
+    <motion.div {...fadeInUp} className="max-w-6xl mx-auto">
       {/* Heading */}
       <motion.div
         {...fadeInUp}
-        transition={{ delay: 0.2, duration: 0.8 }}
-        className="flex justify-between items-center mb-6"
+        transition={{ delay: 0.2 }}
+        className="flex flex-col md:flex-row justify-between items-end border-b elegant-border-b pb-6 mb-8 gap-6"
       >
-        <h2 className="text-2xl font-bold text-pink-600">Manage Branches</h2>
+        <div>
+          <h2 className="text-3xl font-serif text-[#1A1A1A]">Manage <span className="italic text-[#DDA7A5]">Sanctuaries</span></h2>
+        </div>
         <button
-          className="bg-pink-500 text-white px-6 py-3 rounded-full hover:bg-pink-600 transition-colors duration-300 font-medium"
+          className="elegant-button-filled px-6 py-3 text-xs"
           onClick={() => navigate('/dashboard/add-branch')}
         >
-          + Add Branch
+          Add Location
         </button>
       </motion.div>
 
       {/* Search Input */}
       <motion.div
         {...fadeInUp}
-        transition={{ delay: 0.4, duration: 0.8 }}
-        className="mb-6"
+        transition={{ delay: 0.3 }}
+        className="mb-8 max-w-md"
       >
         <input
           type="text"
-          placeholder="Search branches..."
+          placeholder="Search locations..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition-all duration-300"
+          className="elegant-input"
         />
       </motion.div>
 
       {/* Table */}
       <motion.div
         {...fadeInUp}
-        transition={{ delay: 0.6, duration: 0.8 }}
+        transition={{ delay: 0.4 }}
         className="overflow-x-auto"
       >
         {loading ? (
           <div className="flex justify-center items-center py-12">
-            <div className="w-8 h-8 border-4 border-pink-300 border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-sm font-sans font-light tracking-widest uppercase text-[#1A1A1A]/40 animate-pulse">Loading directory...</div>
           </div>
         ) : (
-          <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+          <div className="bg-white/50 backdrop-blur-sm border elegant-border">
             <table className="w-full">
               <thead>
-                <tr className="bg-pink-100">
-                  <th className="p-4 text-left font-semibold text-pink-700">Name</th>
-                  <th className="p-4 text-left font-semibold text-pink-700">Address</th>
-                  <th className="p-4 text-left font-semibold text-pink-700">Contact</th>
-                  <th className="p-4 text-left font-semibold text-pink-700">Manager</th>
-                  <th className="p-4 text-left font-semibold text-pink-700">Actions</th>
+                <tr className="bg-[#FAF9F6] border-b elegant-border-b">
+                  <th className="p-5 text-left font-sans text-[10px] tracking-widest uppercase text-[#1A1A1A]/60 font-medium">Name</th>
+                  <th className="p-5 text-left font-sans text-[10px] tracking-widest uppercase text-[#1A1A1A]/60 font-medium">Address</th>
+                  <th className="p-5 text-left font-sans text-[10px] tracking-widest uppercase text-[#1A1A1A]/60 font-medium">Contact</th>
+                  <th className="p-5 text-left font-sans text-[10px] tracking-widest uppercase text-[#1A1A1A]/60 font-medium">Manager</th>
+                  <th className="p-5 text-left font-sans text-[10px] tracking-widest uppercase text-[#1A1A1A]/60 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((branch, index) => (
                   <motion.tr
                     key={branch._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 + index * 0.15, duration: 0.6 }}
-                    className="border-t border-gray-100 hover:bg-pink-50 transition-colors duration-300"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                    className="border-b border-[#1A1A1A]/5 hover:bg-[#FAF9F6]/50 transition-colors"
                   >
-                    <td className="p-4 font-medium">{branch.name}</td>
-                    <td className="p-4 text-gray-600">{branch.address}</td>
-                    <td className="p-4 text-gray-600">{branch.contact}</td>
-                    <td className="p-4 text-gray-600">{branch.manager}</td>
-                    <td className="p-4 space-x-2">
+                    <td className="p-5 font-serif text-lg text-[#1A1A1A]">{branch.name}</td>
+                    <td className="p-5 text-sm font-light text-[#1A1A1A]/70">{branch.address}</td>
+                    <td className="p-5 text-sm font-light text-[#1A1A1A]/70">{branch.contact}</td>
+                    <td className="p-5 text-sm font-light text-[#1A1A1A]/70">{branch.manager}</td>
+                    <td className="p-5 space-x-4">
                       <button
                         onClick={() => handleEdit(branch)}
-                        className="text-sm px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-full text-white transition"
+                        className="font-sans text-[10px] tracking-widest uppercase border-b border-[#1A1A1A]/20 pb-0.5 text-[#1A1A1A]/60 hover:text-[#DDA7A5] hover:border-[#DDA7A5] transition-colors"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(branch)}
-                        className="text-sm px-4 py-2 bg-red-500 hover:bg-red-600 rounded-full text-white transition"
+                        className="font-sans text-[10px] tracking-widest uppercase border-b border-[#1A1A1A]/20 pb-0.5 text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:border-[#1A1A1A] transition-colors"
                       >
                         Remove
                       </button>
@@ -131,15 +133,11 @@ function BranchList() {
                   </motion.tr>
                 ))}
                 {filtered.length === 0 && (
-                  <motion.tr
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.9, duration: 0.6 }}
-                  >
-                    <td colSpan="5" className="p-8 text-center text-gray-400">
-                      No branches found
+                  <tr>
+                    <td colSpan="5" className="p-10 text-center text-[#1A1A1A]/40 font-serif italic text-sm">
+                      No matching sanctuaries found.
                     </td>
-                  </motion.tr>
+                  </tr>
                 )}
               </tbody>
             </table>
@@ -165,10 +163,10 @@ function BranchList() {
           onConfirm={async () => {
             try {
               await axios.delete(`/branches/${selectedBranch._id}`)
-              toast.success('Branch deleted')
+              toast.success('Location excised')
               fetchBranches()
             } catch (err) {
-              toast.error('Failed to delete')
+              toast.error('Failed to excise')
             }
             setShowDeleteConfirm(false)
           }}

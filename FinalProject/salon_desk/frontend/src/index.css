@@ -1,47 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-onyx: #121212;
-  --color-off-black: #1C1C1C;
-  --color-crimson: #E63946;
-  --color-off-white: #F4F4F5;
-  --color-slate: #27272A;
+  --color-ivory: #FAF9F6;
+  --color-charcoal: #1A1A1A;
+  --color-dusty-rose: #DDA7A5;
+  --color-taupe: #B5A89F;
+  --color-slate-light: #F0EDE5;
 
-  --font-teko: "Teko", sans-serif;
-  --font-grotesk: "Space Grotesk", sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", sans-serif;
 }
 
 @layer base {
   body {
-    background-color: var(--color-onyx);
-    color: var(--color-off-white);
-    font-family: var(--font-grotesk);
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-teko);
-    text-transform: uppercase;
-    line-height: 1;
-    letter-spacing: -0.02em;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-serif);
+    line-height: 1.1;
   }
 }
 
 @layer utilities {
-  .brutalist-border {
-    border: 1px solid var(--color-slate);
+  .elegant-border {
+    border: 1px solid rgba(26, 26, 26, 0.1);
   }
-  .brutalist-border-b {
-    border-bottom: 1px solid var(--color-slate);
+
+  .elegant-border-b {
+    border-bottom: 1px solid rgba(26, 26, 26, 0.1);
   }
-  .brutalist-border-t {
-    border-top: 1px solid var(--color-slate);
+
+  .elegant-border-t {
+    border-top: 1px solid rgba(26, 26, 26, 0.1);
   }
-  .brutalist-pill {
+
+  .elegant-button {
+    background-color: transparent;
+    color: var(--color-charcoal);
+    border: 1px solid rgba(26, 26, 26, 0.2);
     border-radius: 9999px;
-    border: 1px solid var(--color-slate);
+    padding: 0.75rem 2rem;
+    font-family: var(--font-sans);
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-size: 0.8rem;
+    transition: all 0.4s ease;
+  }
+
+  .elegant-button:hover {
+    background-color: var(--color-taupe);
+    color: var(--color-ivory);
+    border-color: var(--color-taupe);
+  }
+
+  .elegant-button-filled {
+    background-color: var(--color-charcoal);
+    color: var(--color-ivory);
+    border-radius: 9999px;
+    padding: 0.75rem 2rem;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+    transition: all 0.4s ease;
+  }
+
+  .elegant-button-filled:hover {
+    background-color: var(--color-dusty-rose);
+    color: var(--color-charcoal);
+  }
+
+  .elegant-input {
+    width: 100%;
+    background: transparent;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.2);
+    padding: 0.75rem 0;
+    font-family: var(--font-sans);
+    color: var(--color-charcoal);
+    outline: none;
+    transition: border-color 0.4s ease;
+  }
+
+  .elegant-input:focus {
+    border-bottom-color: var(--color-taupe);
   }
 }

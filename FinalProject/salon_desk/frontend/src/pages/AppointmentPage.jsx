@@ -1,4 +1,3 @@
-// src/pages/AppointmentPage.jsx
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -31,29 +30,25 @@ function AppointmentPage() {
   const [searchParams] = useSearchParams();
   const serviceId = searchParams.get("serviceId");
 
-  // Fetch branches on mount
   useEffect(() => {
     fetchBranches();
   }, []);
 
-  // Fetch services when branch changes
   useEffect(() => {
     if (formData.branch) {
       fetchServices(formData.branch);
-      setFormData((prev) => ({ ...prev, service: "", stylist: "" })); // reset service & stylist
-      setStylists([]); // reset stylists
+      setFormData((prev) => ({ ...prev, service: "", stylist: "" }));
+      setStylists([]);
     }
   }, [formData.branch]);
 
-  // Fetch stylists when branch or service changes
   useEffect(() => {
     if (formData.branch && formData.service) {
       fetchStylists(formData.branch, formData.service);
-      setFormData((prev) => ({ ...prev, stylist: "" })); // reset stylist
+      setFormData((prev) => ({ ...prev, stylist: "" }));
     }
   }, [formData.branch, formData.service]);
 
-  // Pre-fill service if serviceId is in URL
   useEffect(() => {
     if (serviceId && services.length > 0) {
       const selectedService = services.find((s) => s._id === serviceId);
@@ -126,7 +121,6 @@ function AppointmentPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check for existing appointment (frontend check)
     try {
       const res = await axios.get('/appointments', {
         params: {
@@ -138,11 +132,11 @@ function AppointmentPage() {
         }
       });
       if (res.data.length > 0) {
-        toast.error("YOU ALREADY HAVE AN APPOINTMENT FOR THIS SLOT.");
+        toast.error("You already have a reservation for this slot.");
         return;
       }
     } catch (err) {
-      // Optionally handle error
+      // Intentionally suppressed
     }
 
     const payload = {
@@ -157,178 +151,188 @@ function AppointmentPage() {
     } else {
       payload.guestName = formData.name;
     }
+
     try {
       await axios.post("/appointments", payload);
-      toast.success("APPOINTMENT CONFIRMED.");
+      toast.success("Reservation Confirmed.");
       setTimeout(() => {
         navigate("/dashboard");
-      }, 1000);
+      }, 1500);
     } catch (err) {
-      toast.error("FAILED TO BOOK APPOINTMENT");
+      toast.error("Failed to confirm reservation.");
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-[80vh] text-[#F4F4F5] font-black text-2xl tracking-widest uppercase">
-        Loading Assets...
+      <div className="flex justify-center items-center h-[80vh] text-[#1A1A1A] bg-[#FAF9F6] font-sans font-light text-xl tracking-widest uppercase animate-pulse">
+        Preparing Booking Portal...
       </div>
     );
   }
 
   return (
-    <div className="bg-[#121212] min-h-screen py-12 px-4 md:px-8 text-[#F4F4F5] flex flex-col items-center">
+    <div className="bg-[#FAF9F6] min-h-screen py-24 px-6 md:px-16 text-[#1A1A1A] flex flex-col items-center">
 
-      {/* Editorial Header Image (Placeholder) */}
-      <div className="w-full max-w-5xl h-64 md:h-96 brutalist-border mb-12 bg-[#1C1C1C] relative overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 bg-cover bg-center grayscale contrast-125 opacity-30" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1521590832168-60cc2ec46101?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')" }}></div>
-        <h1 className="relative z-10 text-6xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter mix-blend-difference">
-          Secure <br /> <span className="text-[#E63946]">Slot.</span>
-        </h1>
+      <div className="w-full max-w-4xl text-center mb-16">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl md:text-7xl font-serif text-[#1A1A1A] mb-4"
+        >
+          Reserve Your <span className="italic text-[#DDA7A5]">Time</span>
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="font-sans font-light text-[#1A1A1A]/60 max-w-md mx-auto"
+        >
+          Please provide your details below to secure a private session with our specialists.
+        </motion.p>
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full max-w-5xl"
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+        className="w-full max-w-3xl"
       >
-        <form onSubmit={handleSubmit} className="brutalist-border bg-[#1C1C1C] p-8 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-12 gap-y-16">
+        <form onSubmit={handleSubmit} className="bg-white/50 backdrop-blur-sm border elegant-border p-8 md:p-16 rounded-2xl shadow-sm">
 
-          <div className="col-span-full">
-            <p className="text-[#a1a1aa] uppercase tracking-widest text-lg font-bold">Step 1 — Location & Service</p>
-          </div>
+          <div className="space-y-12">
+            {/* Step 1 */}
+            <div>
+              <h3 className="font-serif text-2xl mb-8 border-b elegant-border-b pb-4">1. Location & Treatment</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">Sanctuary</label>
+                  <select
+                    name="branch"
+                    required
+                    value={formData.branch}
+                    onChange={handleBranchChange}
+                    className="elegant-input appearance-none bg-transparent cursor-pointer"
+                  >
+                    <option value="">Select a location</option>
+                    {branches.map((branch) => (
+                      <option key={branch._id} value={branch._id}>
+                        {branch.name} — {branch.city}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          {/* Branch */}
-          <div>
-            <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Select Branch</label>
-            <select
-              name="branch"
-              required
-              value={formData.branch}
-              onChange={handleBranchChange}
-              className="w-full p-4 bg-transparent brutalist-border-b border-[#27272A] focus:border-[#E63946] text-[#F4F4F5] font-bold uppercase tracking-widest outline-none appearance-none rounded-none"
-            >
-              <option value="" className="bg-[#121212]">-- CHOOSE A BRANCH --</option>
-              {branches.map((branch) => (
-                <option key={branch._id} value={branch._id} className="bg-[#121212]">
-                  {branch.name} — {branch.address}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Service */}
-          <div>
-            <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Select Service</label>
-            <select
-              name="service"
-              required
-              value={formData.service}
-              onChange={handleServiceChange}
-              disabled={!formData.branch}
-              className="w-full p-4 bg-transparent brutalist-border-b border-[#27272A] focus:border-[#E63946] text-[#F4F4F5] font-bold uppercase tracking-widest outline-none disabled:opacity-50 appearance-none rounded-none"
-            >
-              <option value="" className="bg-[#121212]">-- CHOOSE A SERVICE --</option>
-              {services.map((s) => (
-                <option key={s._id} value={s._id} className="bg-[#121212]">
-                  {s.name} (₹{s.price})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="col-span-full brutalist-border-t border-[#27272A] pt-12 mt-4">
-            <p className="text-[#a1a1aa] uppercase tracking-widest text-lg font-bold">Step 2 — Professional & Schedule</p>
-          </div>
-
-          {/* Stylist */}
-          <div className="col-span-full">
-            <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Preferred Stylist</label>
-            <select
-              name="stylist"
-              required
-              value={formData.stylist}
-              onChange={handleChange}
-              disabled={!formData.service}
-              className="w-full max-w-md p-4 bg-transparent brutalist-border-b border-[#27272A] focus:border-[#E63946] text-[#F4F4F5] font-bold uppercase tracking-widest outline-none disabled:opacity-50 appearance-none rounded-none"
-            >
-              <option value="" className="bg-[#121212]">-- CHOOSE A STYLIST --</option>
-              {stylists.map((stylist) => (
-                <option key={stylist._id} value={stylist._id} className="bg-[#121212]">
-                  {stylist.name} ({stylist.gender})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Name (for guests) */}
-          {!user && (
-            <div className="col-span-full">
-              <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Your Name (Guest)</label>
-              <input
-                type="text"
-                name="name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="ENTER YOUR NAME"
-                className="w-full max-w-md p-4 bg-transparent brutalist-border text-[#F4F4F5] font-bold uppercase tracking-widest outline-none focus:border-[#E63946] placeholder-[#27272A]"
-              />
-            </div>
-          )}
-
-          {/* Date */}
-          <div>
-            <label className="block text-2xl font-black mb-4 uppercase tracking-tight">Select Date</label>
-            <input
-              type="date"
-              name="date"
-              required
-              value={formData.date}
-              onChange={handleChange}
-              min={new Date().toISOString().split("T")[0]}
-              className="w-full p-4 bg-transparent brutalist-border border-[#27272A] focus:border-[#E63946] text-[#F4F4F5] font-bold uppercase tracking-widest outline-none block"
-            />
-          </div>
-
-          {/* Time Slot */}
-          <div className="col-span-full">
-            <label className="block text-2xl font-black mb-6 uppercase tracking-tight">Time Slot</label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {availableTimes.map((slot) => (
-                <button
-                  type="button"
-                  key={slot}
-                  onClick={() => setFormData({ ...formData, time: slot })}
-                  className={`py-4 font-mono text-xl font-bold uppercase tracking-widest transition-colors brutalist-pill
-                    ${formData.time === slot
-                      ? "bg-[#E63946] text-[#F4F4F5] border-[#E63946]"
-                      : "bg-[#121212] text-[#a1a1aa] border-[#27272A] hover:bg-[#F4F4F5] hover:text-[#121212]"}`}
-                >
-                  {slot}
-                </button>
-              ))}
-            </div>
-            {/* Hidden input to keep formData.time in sync for form submission */}
-            <input type="hidden" name="time" value={formData.time} />
-            {formData.time && (
-              <div className="mt-8 text-[#E63946] font-bold uppercase tracking-widest text-lg">
-                Selected Slot: <span className="font-black text-2xl">{formData.time}</span>
+                <div className="space-y-2">
+                  <label className="text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">Treatment</label>
+                  <select
+                    name="service"
+                    required
+                    value={formData.service}
+                    onChange={handleServiceChange}
+                    disabled={!formData.branch}
+                    className="elegant-input appearance-none bg-transparent cursor-pointer disabled:opacity-50"
+                  >
+                    <option value="">Select a treatment</option>
+                    {services.map((s) => (
+                      <option key={s._id} value={s._id}>
+                        {s.name} (₹{s.price})
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Submit */}
-          <div className="col-span-full mt-12">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              type="submit"
-              className="w-full brutalist-pill bg-[#F4F4F5] text-[#121212] font-black text-4xl md:text-5xl py-8 hover:bg-[#E63946] hover:text-[#F4F4F5] hover:border-[#E63946] transition-colors"
-            >
-              CONFIRM BOOKING
-            </motion.button>
+            {/* Step 2 */}
+            <div>
+              <h3 className="font-serif text-2xl mb-8 border-b elegant-border-b pb-4">2. Specialist</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">Specialist</label>
+                  <select
+                    name="stylist"
+                    required
+                    value={formData.stylist}
+                    onChange={handleChange}
+                    disabled={!formData.service}
+                    className="elegant-input appearance-none bg-transparent cursor-pointer disabled:opacity-50"
+                  >
+                    <option value="">Select a professional</option>
+                    {stylists.map((stylist) => (
+                      <option key={stylist._id} value={stylist._id}>
+                        {stylist.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {!user && (
+                  <div className="space-y-2">
+                    <label className="text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">Your Name (Guest)</label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Enter your name"
+                      className="elegant-input"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div>
+              <h3 className="font-serif text-2xl mb-8 border-b elegant-border-b pb-4">3. Date & Time</h3>
+              <div className="space-y-8">
+                <div className="max-w-xs space-y-2">
+                  <label className="text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">Date</label>
+                  <input
+                    type="date"
+                    name="date"
+                    required
+                    value={formData.date}
+                    onChange={handleChange}
+                    min={new Date().toISOString().split("T")[0]}
+                    className="elegant-input text-[#1A1A1A]"
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  <label className="text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">Available Slots</label>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    {availableTimes.map((slot) => (
+                      <button
+                        type="button"
+                        key={slot}
+                        onClick={() => setFormData({ ...formData, time: slot })}
+                        className={`py-3 text-sm font-sans font-light rounded-md border transition-all duration-300
+                              ${formData.time === slot
+                            ? "bg-[#DDA7A5] text-white border-[#DDA7A5] shadow-md"
+                            : "bg-transparent text-[#1A1A1A] border-[rgba(26,26,26,0.1)] hover:border-[#DDA7A5]"}`}
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
+                  <input type="hidden" name="time" value={formData.time} />
+                </div>
+              </div>
+            </div>
+
+            {/* Submit */}
+            <div className="pt-8 text-center">
+              <button
+                type="submit"
+                className="elegant-button-filled w-full md:w-auto px-24 py-4"
+              >
+                Confirm Reservation
+              </button>
+            </div>
+
           </div>
         </form>
       </motion.div>

@@ -1,6 +1,6 @@
 // src/pages/LoginPage.jsx
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { motion } from 'framer-motion'
 import { fadeInUp } from '../animations/motionVariants'
@@ -16,74 +16,74 @@ function LoginPage() {
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {
-  e.preventDefault()
-  setLoading(true)
-  try {
-    console.log('🚀 Attempting login with:', { email })
-    const res = await axios.post('/users/login', { email, password })
-    const { user, token } = res.data
-    console.log('✅ Login Response:', res.data)
-    localStorage.setItem('token', token)
-    setRole(user.role)
-    setToken(token)
-    setUser(user)
-    toast.success(`Welcome, ${user.name}!`)
-    navigate('/dashboard')
-  } catch (err) {
-    console.error('❌ Login error:', err)
-    console.error('❌ Error response:', err.response?.data)
-    console.error('❌ Error status:', err.response?.status)
-    toast.error(err?.response?.data?.message || 'Invalid credentials!')
-  } finally {
-    setLoading(false)
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const res = await axios.post('/users/login', { email, password })
+      const { user, token } = res.data
+      localStorage.setItem('token', token)
+      setRole(user.role)
+      setToken(token)
+      setUser(user)
+      toast.success(`Welcome, ${user.name}!`)
+      navigate('/dashboard')
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Invalid credentials!')
+    } finally {
+      setLoading(false)
+    }
   }
-}
 
   return (
     <PageWrapper>
-      <motion.div {...fadeInUp} className="max-w-md mx-auto bg-white p-8 rounded-xl shadow mt-16">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login to Éclat</h1>
-        <form onSubmit={handleLogin} className="space-y-5">
-          <div>
-            <label className="block font-semibold mb-1">Email</label>
-            <input
-              type="email"
-              className="w-full border border-gray-300 rounded-lg p-2"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-semibold mb-1">Password</label>
-            <input
-              type="password"
-              className="w-full border border-gray-300 rounded-lg p-2"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-2 rounded-full font-semibold transition ${
-              loading ? 'bg-pink-300 cursor-not-allowed' : 'bg-pink-500 hover:bg-pink-600'
-            } text-white`}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-        <p className="text-center mt-4 text-sm text-gray-600">
-          Don’t have an account?{' '}
-          <span
-            className="text-pink-500 hover:underline cursor-pointer"
-            onClick={() => navigate('/register')}
-          >
-            Click here to register
-          </span>
-        </p>
-      </motion.div>
+      <div className="bg-[#FAF9F6] min-h-screen py-32 px-6 flex items-center justify-center text-[#1A1A1A]">
+        <motion.div {...fadeInUp} className="w-full max-w-md bg-white/60 backdrop-blur-md p-10 md:p-14 border border-[#1A1A1A]/5 rounded-2xl shadow-sm">
+          <h1 className="text-4xl font-serif text-center mb-10">Access <span className="italic text-[#DDA7A5]">Portal</span></h1>
+
+          <form onSubmit={handleLogin} className="space-y-8">
+            <div className="space-y-2">
+              <label className="text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">Email Address</label>
+              <input
+                type="email"
+                className="elegant-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">Password</label>
+              <input
+                type="password"
+                className="elegant-input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="elegant-button-filled w-full py-4 text-sm"
+              >
+                {loading ? 'Authenticating...' : 'Sign In'}
+              </button>
+            </div>
+          </form>
+
+          <p className="text-center mt-10 text-xs font-sans tracking-widest uppercase text-[#1A1A1A]/60">
+            New to Éclat?{' '}
+            <Link
+              to="/register"
+              className="text-[#1A1A1A] hover:text-[#DDA7A5] transition-colors font-medium border-b border-[#1A1A1A]/20 pb-0.5"
+            >
+              Request Access
+            </Link>
+          </p>
+        </motion.div>
+      </div>
     </PageWrapper>
   )
 }

@@ -12,10 +12,10 @@ function OwnerDashboard() {
 
   const menuItems = [
     { key: "overview", label: "Overview" },
-    { key: "branches", label: "Branches" },
-    { key: "stylists", label: "Stylists" },
-    { key: "services", label: "Services" },
-    { key: "appointments", label: "Appointments" },
+    { key: "branches", label: "Sanctuaries" },
+    { key: "stylists", label: "Specialists" },
+    { key: "services", label: "Treatments" },
+    { key: "appointments", label: "Reservations" },
   ]
 
   const renderContent = () => {
@@ -36,22 +36,22 @@ function OwnerDashboard() {
 
   return (
     <PageWrapper>
-      <div className="flex flex-col md:flex-row min-h-screen text-[#F4F4F5]">
+      <div className="flex flex-col md:flex-row min-h-screen bg-[#FAF9F6] text-[#1A1A1A]">
         {/* Sidebar */}
-        <aside className="w-full md:w-1/4 border-b md:border-b-0 md:border-r border-[#27272A] bg-[#121212] p-8">
-          <h2 className="text-4xl lg:text-5xl font-black text-[#E63946] mb-12 uppercase tracking-tighter">
+        <aside className="w-full md:w-1/4 md:border-r elegant-border bg-[#F0EDE5]/50 p-8 md:p-12">
+          <h2 className="text-3xl lg:text-4xl font-serif text-[#1A1A1A] mb-12">
             Owner <br />
-            <span className="text-[#F4F4F5]">Panel</span>
+            <span className="italic text-[#DDA7A5]">Dashboard</span>
           </h2>
           <nav>
-            <ul className="space-y-4">
+            <ul className="space-y-2">
               {menuItems.map((item) => (
                 <li key={item.key}>
                   <button
                     onClick={() => setActiveTab(item.key)}
-                    className={`w-full text-left px-6 py-4 rounded-none transition-colors border text-lg uppercase font-bold tracking-widest ${activeTab === item.key
-                        ? "bg-[#E63946] text-[#F4F4F5] border-[#E63946]"
-                        : "bg-transparent text-[#a1a1aa] border-[#27272A] hover:border-[#F4F4F5] hover:text-[#F4F4F5]"
+                    className={`w-full text-left px-4 py-3 rounded-md transition-all font-sans text-xs tracking-widest uppercase ${activeTab === item.key
+                      ? "bg-white shadow-sm font-medium text-[#1A1A1A]"
+                      : "bg-transparent text-[#1A1A1A]/60 hover:text-[#1A1A1A]"
                       }`}
                   >
                     {item.label}
@@ -63,7 +63,7 @@ function OwnerDashboard() {
         </aside>
 
         {/* Main Content */}
-        <main className="w-full md:w-3/4 md:p-12 bg-[#1C1C1C]">
+        <main className="w-full md:w-3/4 p-6 md:p-12">
           {renderContent()}
         </main>
       </div>
