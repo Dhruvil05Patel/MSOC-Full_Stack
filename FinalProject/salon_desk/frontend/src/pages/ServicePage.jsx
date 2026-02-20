@@ -46,11 +46,8 @@ function ServicePage() {
 
   // Simulated images for services based on generic keywords
   const getServiceImage = (name, category) => {
-    const query = name.toLowerCase().includes('color') ? 'hair color'
-      : name.toLowerCase().includes('cut') ? 'haircut styling'
-        : category === 'male' ? 'barber fade'
-          : 'salon treatment';
-    return `https://images.unsplash.com/photo-1562322140-8baeececf3ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80`;
+    // Elegant, abstract license-free salon tools/interior to remain culturally neutral/applicable
+    return `https://images.unsplash.com/photo-1519782806283-7d2d312edaa5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80`;
   }
 
   if (loading) {

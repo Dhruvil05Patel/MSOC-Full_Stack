@@ -117,12 +117,15 @@ function StylistPage() {
                   transition={{ delay: 0.5 + Math.min(index * 0.1, 0.5) }}
                   className="flex flex-col items-center text-center group"
                 >
-                  {/* Portrait Placeholder */}
                   <div className="w-56 h-72 bg-[#ebe8e1] mb-8 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[#DDA7A5]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="w-full h-full flex items-center justify-center font-serif text-5xl text-[#1A1A1A]/20">
-                      {getInitials(stylist.name)}
-                    </div>
+                    <div className="absolute inset-0 bg-[#DDA7A5]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                    {stylist.imageUrl ? (
+                      <img src={stylist.imageUrl} alt={stylist.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center font-serif text-5xl text-[#1A1A1A]/20">
+                        {getInitials(stylist.name)}
+                      </div>
+                    )}
                   </div>
 
                   <h3 className="text-3xl font-serif text-[#1A1A1A] mb-2">{stylist.name}</h3>

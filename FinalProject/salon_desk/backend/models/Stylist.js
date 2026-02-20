@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const stylistSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  imageUrl: { type: String },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
   specialty: String,
