@@ -7,6 +7,14 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 
+const SERVICE_IMAGES_BY_CATEGORY = {
+  female: '/services/female.jpg',
+  male: '/services/signature_cut.jpg',
+  unisex: '/services/unisex.jpg',
+}
+
+const DEFAULT_SERVICE_IMAGE = '/services/signature_cut.jpg'
+
 function ServicePage() {
   const [services, setServices] = useState([])
   const [loading, setLoading] = useState(true)
@@ -44,10 +52,8 @@ function ServicePage() {
     return matchesFilter && matchesSearch
   })
 
-  // Simulated images for services based on generic keywords
-  const getServiceImage = (name, category) => {
-    // Elegant, abstract license-free salon tools/interior to remain culturally neutral/applicable
-    return `https://images.unsplash.com/photo-1519782806283-7d2d312edaa5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80`;
+  const getServiceImage = (category) => {
+    return SERVICE_IMAGES_BY_CATEGORY[category] || DEFAULT_SERVICE_IMAGE
   }
 
   if (loading) {
@@ -150,7 +156,7 @@ function ServicePage() {
                 >
                   <div className="w-full md:w-48 h-64 md:h-64 relative overflow-hidden shrink-0">
                     <img
-                      src={getServiceImage(service.name, service.category)}
+                      src={getServiceImage(service.category)}
                       alt={service.name}
                       loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"

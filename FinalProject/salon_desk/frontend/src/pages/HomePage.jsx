@@ -125,7 +125,7 @@ function HomePage() {
               >
                 <div className="overflow-hidden aspect-[4/5] mb-8 relative">
                   <div className="absolute inset-0 bg-[#DDA7A5]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <img src="https://images.unsplash.com/photo-1615397323625-f5d6978583fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Skincare" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                  <img src="/Botanical_Radiance.jpg" alt="Skincare" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
                 </div>
                 <h3 className="text-2xl font-serif mb-4">Botanical Radiance</h3>
                 <p className="text-[#1A1A1A]/70 font-sans font-light text-sm leading-relaxed mb-6">Rejuvenating organic facials and therapies designed to restore your skin's innate luminosity.</p>
