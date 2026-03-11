@@ -121,7 +121,7 @@ function RegisterPage() {
               to="/login"
               className="text-[#1A1A1A] hover:text-[#DDA7A5] transition-colors font-medium border-b border-[#1A1A1A]/20 pb-0.5"
             >
-              Access Portal
+              Sign In
             </Link>
           </p>
         </motion.div>

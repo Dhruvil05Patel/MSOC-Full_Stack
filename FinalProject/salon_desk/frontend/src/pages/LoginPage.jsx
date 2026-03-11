@@ -79,7 +79,7 @@ function LoginPage() {
               to="/register"
               className="text-[#1A1A1A] hover:text-[#DDA7A5] transition-colors font-medium border-b border-[#1A1A1A]/20 pb-0.5"
             >
-              Request Access
+              Sign Up
             </Link>
           </p>
         </motion.div>

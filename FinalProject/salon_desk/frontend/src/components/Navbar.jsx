@@ -76,7 +76,7 @@ function Navbar() {
           </div>
         ) : (
           <Link to="/login" className="elegant-button">
-            Sign In / Portal
+            Sign In / Sign Up
           </Link>
         )}
       </div>
